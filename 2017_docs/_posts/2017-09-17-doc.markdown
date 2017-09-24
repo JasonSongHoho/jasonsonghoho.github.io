@@ -1,0 +1,15 @@
+---
+layout: blogs_default
+title: Spark可以用作数据仓库核心组件
+name: 超越Spark，大数据集群计算的生产实践
+subtitle: Spark 推荐系统、反欺诈等。dasdaasdfadsfasdfasdfasd
+modal-id: 1
+tag: saprk
+img: spark.png
+thumbnail: spark.png
+alt: Picture 
+writer: CSDN大数据
+---
+<h2>{{ page.title }}</h2>
+<p>我的第一篇文章</p>
+<p>{{ page.date | date_to_string }}</p>
