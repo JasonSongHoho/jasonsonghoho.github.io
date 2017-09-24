@@ -1,0 +1,72 @@
+---
+layout: blogs_default
+title: Spark端口整理
+name: Spark端口整理
+subtitle:  Spark makes heavy use of the network, and some environments have strict requirements for using tight firewall settings. Below are the primary ports that Spark uses for its communication and how to configure those ports.
+modal-id: 1
+tags: 
+    - spark
+    - 大数据
+img: spark.png
+thumbnail: spark.png
+alt: Picture 
+writer: jason song
+reference-name: 
+    - spark doc
+    - spark doc2
+reference-url: 
+    - https://spark.apache.org/docs/latest/security.html#configuring-ports-for-network-security
+    - https://spark.apache.org/docs/latest/configuration.html
+    
+---
+
+
+>Configuring Ports for Network Security
+>Spark makes heavy use of the network, and some environments have strict requirements for using tight firewall settings. Below are the primary ports that Spark uses for its communication and how to configure those ports.
+
+## Standalone mode only
+
+| From	To	| Default Port | Purpose	| Configuration| Setting |	Notes |
+| --------   |  :-----:   | :----:  | :-----:   |  :----:  |  :----:   |
+| Browser |	Standalone Master	|8080|	Web UI  |	spark.master.ui.port  SPARK_MASTER_WEBUI_PORT	|Jetty-based. Standalone mode only.|
+|Browser |	 Standalone Worker	|8081|	Web UI	 |spark.worker.ui.port SPARK_WORKER_WEBUI_PORT	|Jetty-based. Standalone mode only.|
+| Driver、 Standalone Worker	|Standalone Master	 |7077|	Submit job to cluster Join cluster	|SPARK_MASTER_PORT |Set to "0" to choose a port randomly. Standalone mode only. spark service 端口|
+| Standalone Master |	Standalone Worker|	(random)|	Schedule executors	|SPARK_WORKER_PORT	|Set to "0" to choose a port randomly. Standalone mode only.|
+
+## All cluster managers
+
+| From	To	| Default Port | Purpose	| Configuration| Setting |	Notes |
+| --------   |  :-----:   | :----:  | :-----:   |  :----:  |  :----:   |
+| Browser |History Server	|4040|	Web UI  |	spark.master.ui.port  	|Jetty-based. 一个worker上可以有多个Job,因此该端口号会随着job的增加而递增。|
+|Browser |	 History Server|8081|	Web UI	 |spark.history.ui.port	|Jetty-based.  |
+| Executor /  Standalone Master|Driver	 |(random)|	Connect to application /Notify executor state changes	|spark.driver.port |Set to "0" to choose a port randomly. |
+| Standalone Master |	Executor / Driver|	(random)|Block Manager port	|spark.blockManager.port|Raw socket via ServerSocketChannel|
+
+注：History Server 是需要配置才可以访问的。配置好后访问该服务，能重新渲染生成UI界面展现出该Application在执行过程中的运行时信息。
+       启用该服务方法可参考 Spark History Server配置使用 和 spark 查看 job history 日志 。
+
+## Spark UI
+
+| From	To	| Default |	Meaning |
+| --------   |  :-----:   | :----:  |
+|spark.blockManager.port |(random)	 |Port for all block managers to listen on. These exist on both the driver and the executors. |
+|spark.driver.blockManager.port |(value of spark.blockManager.port)	 |spark.driver.blockManager.port	(value of spark.blockManager.port)	Driver-specific port for the block manager to listen on, for cases where it cannot use the same configuration as executors. |
+|spark.driver.port  |(random)	 |spark.driver.port	(random)	Port for the driver to listen on. This is used for communicating with the executors and the standalone Master. |
+
+
+## Shuffle Behavior
+
+|Property Name	|Default|	Meaning|
+| --------   |  :-----:   | :----:  |
+|spark.shuffle.service.port	|7337|	Port on which the external shuffle service will run.|
+
+## Spark隐藏端口
+
+6066 相关隐藏端口
+可参考: [apache-spark-hidden-rest-api](http://arturmkrtchyan.com/apache-spark-hidden-rest-api)
+
+## 参考
+>[spark doc](https://spark.apache.org/docs/latest/security.html#configuring)
+>
+>[spark doc2](https://spark.apache.org/docs/latest/configuration.html)
+

@@ -1,0 +1,13 @@
+---
+title: Spark可以用作数据仓库核心组件
+name: 超越Spark，大数据集群计算的生产实践
+subtitle: Spark拥有一个庞大的、不断增长的社区，还有在企业环境中不可或缺的生态系统。这些生态系统提供了不同生产环境案例所需的许多功能。一般来说，Spark应用做的是机器学习算法、日志聚合分析或者商务智能相关的运算，因为它在许多领域都有广泛的应用，包括商务智能、数据仓库、推荐系统、反欺诈等。
+layout: 2017_default
+modal-id: 1
+img: spark.png
+thumbnail: spark.png
+alt: Picture 
+writer: CSDN大数据
+link: https://mp.weixin.qq.com/s/3_DjCXKKiUJtoTQSWnoczA
+description: 对任何业务来说，数据分析都是一个核心环节。对分析型的应用来说，数据仓库系统就是其核心系统。Spark有众多的框架和生态系统，所以它能作为核心组件为企业环境提供数据仓库功能
+---
