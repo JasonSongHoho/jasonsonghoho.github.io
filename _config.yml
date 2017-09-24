@@ -10,7 +10,7 @@ baseurl: ""                             # for example, '/blog' if your blog host
 
 markdown: kramdown
 
-logo: "css/2017_style/img/logos/favicon.ico"
+logo: "/css/2017_style/img/logos/favicon.ico"
 
 imgurl:
  tec: "http://jasonsonghoho.github.io/blog_images/technology"
