@@ -1,15 +1,175 @@
 ---
 layout: blogs_default
-title: Spark可以用作数据仓库核心组件
-name: 超越Spark，大数据集群计算的生产实践
-subtitle: Spark 推荐系统、反欺诈等。dasdaasdfadsfasdfasdfasd
-modal-id: 1
-tag: saprk
-img: spark.png
-thumbnail: spark.png
-alt: Picture 
-writer: CSDN大数据
+title: 使用jekyll 搭建一个github page
+subtitle: 如何使用jekyll 搭建一个github page
+tags:
+    - jekyll
+    - github
+    - gitgub page
+
 ---
-<h2>{{ page.title }}</h2>
-<p>我的第一篇文章</p>
-<p>{{ page.date | date_to_string }}</p>
+
+ **目录 (Table of Contents)**
+------------------------------------------------
+  <div class="markdown-toc editormd-markdown-toc">
+      <ul class="markdown-toc-list">
+          <li><a class="toc-level-2" href="#一-简介" level="2">一 简介:</a></li>
+          <li><a class="toc-level-2" href="#二-GitHub page 是什么？Jekyll 是什么？" level="2">二 GitHub page 是什么？Jekyll 是什么？</a>
+          </li>
+          <li><a class="toc-level-2" href="#三-前提" level="2">三 前提</a></li>
+          <li><a class="toc-level-2" href="#四-GitHub page搭建" level="2">四 GitHub page搭建</a></li>
+          <li><a class="toc-level-2" href="#五-环境搭建步骤" level="2">五 环境搭建步骤</a>
+              <ul>
+                  <li><a class="toc-level-4" href="#安装 Ruby" level="4">安装 Ruby</a></li>
+                  <li><a class="toc-level-4" href="#安装 DevKit" level="4">安装 DevKit</a></li>
+                  <li><a class="toc-level-4" href="#安装 Jekyll" level="4">安装 Jekyll</a></li>
+                  <li><a class="toc-level-4" href="#启动 Jekyll" level="4">启动 Jekyll</a></li>
+              </ul>
+          </li>
+          <li><a class="toc-level-2" href="#六-实用工具" level="2">六 实用工具</a></li>
+          <li><a class="toc-level-2" href="#七-参考" level="2">七 参考</a>
+              <ul></ul>
+          </li>
+      </ul>
+  </div>
+
+
+## 一 简介
+
+>相信大家都有过搭建自己的技术博客的想法，但是实现起来却并不是那么容易，
+个人总结了一下，主要有两方面的原因：
+
+>1、建站需要购买域名和服务器，对于大多数人来说这应该算是一个基本没有什么收益的不大不小的支出，不太划算。 \
+2、传统方式搭建一个自己的博客网站太繁琐。
+
+>基于以上原因，自己实现博客的过程充满阻碍。但是又不甘心于在CSDN、博客园等网站上用固定的博客模板。
+而本文介绍的方法可以完美解决上述问题，尽管功能上仍有所不足，但已足够强大。
+
+## 二 GitHub page 是什么？Jekyll 是什么？
+[Github Pages](https://pages.github.com/) 是面向用户、组织和项目开放的公共静态页面搭建托管服务，站点可以被免费托管在Github 上，你可以选择使用Github Pages 默认提供的域名github.io 或者自定义域名来发布站点。
+
+[Jekyll](http://jekyllcn.com/docs/home) 是一个简单的博客形态的静态站点生产机器。总之就是一个快速搭建web 网站的模板工具。而GitHub page正是基于它实现的。
+
+## 三 前提
+搭建GitHub page 首先需要注册一个[GitHub 账号](https://github.com/)，掌握git常用命令，掌握web开发基础知识，了解linux 基本命令，了解markdown基本用法。
+
+## 四 GitHub page搭建
+首先去注册一个github账号。一个简单的page demo步骤如下：
+
+- 登录到Github上，新建一个github项目
+
+![newgit1.png]({{site.imgurl.tec}}/170924/newgit1.png)
+
+- **注意项目名必须与你的 github 账户名一致 **，点击create
+![newgit2.png]({{site.imgurl.tec}}/170924/newgit2.png)
+
+- 拷贝项目地址
+![newgit3.png]({{site.imgurl.tec}}/170924/newgit3.png)
+
+- 点击"setting"
+![newgit4.png]({{site.imgurl.tec}}/170924/newgit4.png)
+
+- 找到gitgub page ,检查是否为 master branch
+![newgit5.png]({{site.imgurl.tec}}/170924/newgit5.png)
+
+- 此处使用idea clone git项目，没有idea可使用GitHub bash，参考命令：
+<pre><code class="shell">
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/JasonSongHoho/jasonsonghoho.github.io.git
+git push -u origin master
+ </code></pre> 
+
+![idea1.png]({{site.imgurl.tec}}/170924/idea1.png)
+
+- 粘贴刚才拷贝的项目地址
+![idea2.png]({{site.imgurl.tec}}/170924/idea2.png)
+
+- 新建一个html文件，命名为index，内容如图
+ ![idea3.png]({{site.imgurl.tec}}/170924/idea3.png)
+
+- push项目代码
+![idea4.png]({{site.imgurl.tec}}/170924/idea4.png)
+
+- 登录GitHub 查看 ，代码已提交
+![aftgit1.png]({{site.imgurl.tec}}/170924/aftgit1.png)
+
+- 访问 https://jasonsonghoho.github.io/ jasonsonghoho为你的账户名
+![aftgit2.png]({{site.imgurl.tec}}/170924/aftgit2.png)
+
+
+
+
+
+## 五 环境搭建步骤
+GitHub page的开发需要使用jekyll，因此，首先需要搭建好jekyll开发环境。这里介绍windows下的搭建步骤，mac 环境或者linux下搭建步骤相似，且出问题的概率更小。
+
+##### 步骤如下:
++ 安装 Ruby 
++ 安装 DevKit 
++ 安装 Jekyll 
++ 启动 Jekyll 
+
+
+
+####  安装 Ruby
+Jekyll是一款基于Ruby的插件，安装Ruby是必须的. 
+
+1. 前往 https://rubyinstaller.org/downloads/ , 在 “RubyInstallers” 部分，选择一个版本点击下载，“X86”代表32位机器版本，此处选择了“rubyinstaller-2.2.6-x64”版本。
+注意，**不要选择低于2.1 版本的**，我在安装jekyll时提示版本不能低于2.1。
+
+2.  执行安装包安装，考虑到win10下C盘下的文件访问可能需要管理员权限，安装目录我选择了D盘。
+注意，**不要使用带有空格的文件夹目录**，勾选 “Add Ruby executables to your PATH”，这样执行程序会被自动添加至 PATH 而避免不必要的麻烦。 
+![ruby-install.png]({{site.imgurl.tec}}/170924/ruby-install.png)
+
+3.  打开命令提示行 输入 `ruby -v` 
+<pre><code class="shell">
+    C:\Users\JasonSong\Desktop>ruby -v
+    ruby 2.2.6p396 (2016-11-15 revision 56800) [x64-mingw32]
+ </code></pre> 
+
+#### 安装 DevKit
+DevKit 是一个在 Windows 上帮助简化安装及使用 Ruby C/C++ 扩展如 RDiscount 和 RedCloth 的工具箱。 详细的安装指南可以在程序的wiki 页面 阅读。
+
+1. 前往 https://rubyinstaller.org/downloads/ ,  下载DevKit 安装包。
+![devkit-inst.png]({{site.imgurl.tec}}/170924/devkit-inst.png)
+
+2. 运行安装包并解压缩至某文件夹，如 D:\DevKit
+   
+   通过初始化来创建 config.yml 文件。在命令行窗口内，输入下列命令：
+<pre><code class="shell">
+    cd “DevKit”
+    ruby dk.rb init
+    ruby dk.rb review
+    ruby dk.rb install
+ </code></pre> 
+ 
+#### 安装 Jekyll
+确保 gem 已经正确安装
+<pre><code class="shell">
+gem -v
+gem install jekyll
+ </code></pre> 
+ 
+#### 启动 Jekyll
+
+按照官方的 Jekyll 快速开始手册 的步骤， 一个新的 Jekyll 博客可以被建立并在localhost:4000浏览。
+<pre><code class="shell">
+jekyll new myblog
+cd myblog
+jekyll serve
+ </code></pre> 
+可能会遇到服务器没有响应或者 443 等错误，这些都无需担心，多尝试几次就可以。
+
+
+## 六 实用工具
+- [Editor.md](https://pandao.github.io/editor.md/) 一个开源在线 Markdown 编辑器 
+- [Jekyll 使用参考](http://jekyllcn.com/docs/home/) 
+- [Jekyll 主题](http://jekyllthemes.org/page2/)
+
+
+## 七 参考
+ - [搭建一个免费的，无限流量的Blog----github Pages和Jekyll入门](http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html)
+ - [Windows 上安装 Jekyll](http://blog.csdn.net/rainloving/article/details/45745491)
+
