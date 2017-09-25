@@ -1,37 +1,68 @@
-## Welcome to GitHub Pages
+>English
+=====
 
-You can use the [editor on GitHub](https://github.com/JasonSongHoho/jasonsonghoho.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Welcome to Jason's GitHub Pages
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+##### Jason Blog
 
-### Markdown
+##### Writer：Jason Song(jisong song)
+ 
+##### Introduction:
+This blog is currently the following:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+1. used to record some of their daily technical problems encountered
+2. record life
+3. some interesting and funny content
 
-```markdown
-Syntax highlighted code block
+##### About Me:
+ 
+City: Hangzhou, China
+ 
+Bio: Programming is finding wheels. If can't, make them yourself.
+ 
+ 
+##### Contact Me:
 
-# Header 1
-## Header 2
-### Header 3
+mail: songjisong@foxmail.com
 
-- Bulleted
-- List
+facebook: https://www.facebook.com/jisong.song.12
 
-1. Numbered
-2. List
+ 
+**github**: https://github.com/JasonSongHoho
 
-**Bold** and _Italic_ and `Code` text
+<br><br><br><br>
 
-[Link](url) and ![Image](src)
-```
+>中文
+=====
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## 欢迎来到我的博客 Jason Blog
 
-### Jekyll Themes
+ 
+##### 博主：Jason 
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/JasonSongHoho/jasonsonghoho.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+##### 简介：
 
-### Support or Contact
+这个博客目前主要有以下内容：
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+1. 用来记录自己日常遇到的一些技术上的问题
+2. 记录生活
+3. 一些有趣、搞笑的内容
+
+##### 关于我:
+ 
+90后，杭州
+ 
+编程就是寻找最好的轮子
+ 
+ 
+
+##### 联系方式：
+
+邮箱: songjisong@foxmail.com
+
+facebook: https://www.facebook.com/jisong.song.12
+
+QQ: 1185340883 
+
+**github**: https://github.com/JasonSongHoho
+
