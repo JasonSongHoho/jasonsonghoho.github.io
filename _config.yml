@@ -2,7 +2,9 @@
 title: Jason Blog
 SEOTitle: Jason Blog
 header-img: img/home-bg.jpg
-email: songjisong@foxmail.com
+email:
+ fox: songjisong@foxmail.com
+ gmail: songjisong93@gmail.com
 description: "Jason Blog"
 keyword: "Jason Blog"
 url: "http://jasonsonghoho.github.io"              # your host, for absolute URL
@@ -17,8 +19,8 @@ imgurl:
  life: "http://jasonsonghoho.github.io/blog_images/life"
 
 social:
-  name: Your Facebook Page
-  link: "https://www.facebook.com/leomessi"
+  name: My Facebook Page
+  link: "http://www.facebook.com/jisong.song.12"
 
 google_site_verification: googleXXXXXXXXXXXXXXXX.html
 
@@ -31,11 +33,11 @@ gems:
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
 social:
   - title: facebook
-    url: https://www.facebook.com/leomessi
+    url: http://www.facebook.com/jisong.song.12
   - title: weibo
     url: http://weibo.com/u/3278732140
   - title: github
-    url: https://github.com/JasonSongHoho
+    url: http://github.com/JasonSongHoho
 
 # Build settings
 markdown: kramdown
