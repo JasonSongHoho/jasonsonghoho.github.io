@@ -45,7 +45,7 @@
               "bdStyle": "0",
               "bdSize": "16"
           },
-          "slide": {"type": "slide", "bdImg": "5", "bdPos": "right", "bdTop": "100"},
+          "share": {},
           "image": {
               "viewList": ["qzone", "tsina", "tqq", "renren", "weixin"],
               "viewText": "分享到：",
@@ -104,6 +104,7 @@
   <div class="event black-frame">
       <h1 class="title">{{ page.title }}</h1>
       <p style="font-size: 12px;color: #5f5f5f;">published on {{ page.date | date_to_string }}</p>
+      <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
       <div class="tags ">
           <p>标签：
               {% for tag in page.tags %}
