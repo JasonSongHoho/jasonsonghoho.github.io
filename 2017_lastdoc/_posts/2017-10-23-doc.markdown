@@ -1,0 +1,80 @@
+---
+layout: blogs_default
+title: Dubbo Telnet 命令
+subtitle:  dubbo 支持通过 telnet 命令来管理服务
+tags:
+    - dubbo
+---
+
+
+ **目录 (Table of Contents)**
+------------------------------------------------
+<div class="markdown-toc editormd-markdown-toc"><ul class="markdown-toc-list"><li><a class="toc-level-2" href="#login" level="2">login</a></li><li><a class="toc-level-2" href="#status" level="2">status</a></li><li><a class="toc-level-2" href="#ls" level="2">ls</a></li><li><a class="toc-level-2" href="#ps" level="2">ps</a></li><li><a class="toc-level-2" href="#trace" level="2">trace</a></li><li><a class="toc-level-2" href="#invoke" level="2">invoke</a></li><li><a class="toc-level-2" href="#more" level="2">more</a><ul></ul></li></ul></div>
+
+>从 2.0.5 版本开始，dubbo 开始支持通过 telnet 命令来镜像服务治理。
+
+## login
+
+telnet localhost 20880(dubbo或服务端口)
+
+![login]({{site.imgurl.tec}}/171023/login.png)
+
+## status
+
+1. status: 显示汇总状态，该状态将汇总所有资源的状态，当全部 OK 时则显示 OK，只要有一个 ERROR 则显示 ERROR，只要有一个 WARN 则显示 WARN
+2. status -l: 显示状态列表
+
+见上图
+
+## ls
+
+显示服务列表
+
+1. ls: 显示服务列表
+2. ls -l: 显示服务详细信息列表
+3. ls XxxService: 显示服务的方法列表
+4. ls -l XxxService: 显示服务的方法详细信息列表
+
+![ls]({{site.imgurl.tec}}/171023/ps&ls.png)
+
+## ps
+
+显示服务端口列表
+
+1. ps: 显示服务端口列表
+2. ps -l: 显示服务地址列表
+3. ps 20880: 显示端口上的连接信息
+4. ps -l 20880: 显示端口上的连接详细信息
+
+见上图
+
+
+## trace
+
+跟踪服务任意方法的调用情况
+
+
+1. trace XxxService: 跟踪 1 次服务任意方法的调用情况
+2. trace XxxService 10: 跟踪 10 次服务任意方法的调用情况
+3. trace XxxService xxxMethod: 跟踪 1 次服务方法的调用情况
+4. trace XxxService xxxMethod 10: 跟踪 10 次服务方法的调用情况
+
+![trace]({{site.imgurl.tec}}/171023/trace.png)
+
+## invoke
+
+调用服务的方法
+
+1. invoke XxxService.xxxMethod({"prop": "value"}): 调用服务的方法
+2. invoke xxxMethod({"prop": "value"}): 调用服务的方法(自动查找包含此方法的服务)
+
+![invoke]({{site.imgurl.tec}}/171023/invoke.png)
+
+
+
+
+## more
+
+更多 Dubbo Telnet 命令请参阅：[Telnet 命令参考手册](https://dubbo.gitbooks.io/dubbo-user-book/references/telnet.html) 
+
+
