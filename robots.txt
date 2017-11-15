@@ -8,3 +8,4 @@ User-agent: *
 Disallow: /css
 
 test1
+push 2
