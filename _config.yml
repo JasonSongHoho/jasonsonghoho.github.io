@@ -45,3 +45,5 @@ permalink: pretty
 
 plugins:
   - jekyll-seo-tag
+
+port: 4001
