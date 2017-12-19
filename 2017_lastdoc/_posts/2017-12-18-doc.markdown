@@ -151,8 +151,7 @@ Timer 其实是 Histogram 和 Meter 的结合
 ##  Reporter 
 报表，用于展示统计结果
 
-1. 通过JMX报告Metric。
-
+1. 通过JMX报告Metric
 ```
 final JmxReporter reporter = JmxReporter.forRegistry(registry).build();
 reporter.start();
