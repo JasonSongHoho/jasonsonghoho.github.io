@@ -136,7 +136,7 @@ Timer测量一段代码被调用的速率和它的持续时间的分布。
 private final Timer responses = metrics.timer(name(RequestHandler.class, "responses"));
 
 public String handleRequest(Request request, Response response) {
-    final Timer.Context context = responses.time();
+    final Timer.Context context = responses.time(); //相当于Meter.mark()
     try {
         // etc;
         return "OK";
