@@ -80,4 +80,6 @@ theme: hexo-theme-next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repo: git@github.com:JasonSongHoho/jasonsonghoho.github.io.git
+  branch: master
