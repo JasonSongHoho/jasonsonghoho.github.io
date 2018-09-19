@@ -81,5 +81,5 @@ theme: hexo-theme-next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:JasonSongHoho/jasonsonghoho.github.io.git
-  branch: master
+  repo:
+    github: git@github.com:JasonSongHoho/jasonsonghoho.github.io.git,master
