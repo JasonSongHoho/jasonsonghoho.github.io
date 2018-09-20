@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kairosdb,cassandra,TScached,linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="jason's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="目录 (Table of Contents)环境问题&amp;amp;分析&amp;amp;解决问题1分析解决问题2分析解决其他问题分析&amp;amp;解决其他资料   环境统计局，三个节点配置一样：  内存：500+G CPU：4*13 core  Cassandra 、kaiorsdb  、指标库都是以集群模式部署在三台机器上。 问题&amp;amp;分析&amp;amp;解决问题1统计局 monitor线上环境 统计报表和仪表">
+<meta name="keywords" content="kairosdb,cassandra,TScached,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次store 指标库 线上故障的排查">
+<meta property="og:url" content="https://jasonsonghoho.github.io/2017/09/28/170928/index.html">
+<meta property="og:site_name" content="jason&#39;s blog">
+<meta property="og:description" content="目录 (Table of Contents)环境问题&amp;amp;分析&amp;amp;解决问题1分析解决问题2分析解决其他问题分析&amp;amp;解决其他资料   环境统计局，三个节点配置一样：  内存：500+G CPU：4*13 core  Cassandra 、kaiorsdb  、指标库都是以集群模式部署在三台机器上。 问题&amp;amp;分析&amp;amp;解决问题1统计局 monitor线上环境 统计报表和仪表">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://jasonsonghoho.github.io/2017/09/28/170928/load_time.png">
+<meta property="og:image" content="https://jasonsonghoho.github.io/2017/09/28/170928/cassandra1.png">
+<meta property="og:image" content="https://jasonsonghoho.github.io/2017/09/28/170928/cassandra2.png">
+<meta property="og:updated_time" content="2018-09-20T15:23:28.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次store 指标库 线上故障的排查">
+<meta name="twitter:description" content="目录 (Table of Contents)环境问题&amp;amp;分析&amp;amp;解决问题1分析解决问题2分析解决其他问题分析&amp;amp;解决其他资料   环境统计局，三个节点配置一样：  内存：500+G CPU：4*13 core  Cassandra 、kaiorsdb  、指标库都是以集群模式部署在三台机器上。 问题&amp;amp;分析&amp;amp;解决问题1统计局 monitor线上环境 统计报表和仪表">
+<meta name="twitter:image" content="https://jasonsonghoho.github.io/2017/09/28/170928/load_time.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jasonsonghoho.github.io/2017/09/28/170928/"/>
+
+
+
+
+
+  <title>记一次store 指标库 线上故障的排查 | jason's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jason's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2017/09/28/170928/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jason song">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jason's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">记一次store 指标库 线上故障的排查</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-28T22:08:41+08:00">
+                2017-09-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><div class="markdown-toc editormd-markdown-toc"><ul class="markdown-toc-list"><li><a class="toc-level-2" href="#环境" level="2">环境</a></li><li><a class="toc-level-2" href="#问题&amp;分析&amp;解决" level="2">问题&amp;分析&amp;解决</a><ul><li><a class="toc-level-4" href="#问题1" level="4">问题1</a></li><li><a class="toc-level-4" href="#分析" level="4">分析</a></li><li><a class="toc-level-4" href="#解决" level="4">解决</a></li><li><a class="toc-level-4" href="#问题2" level="4">问题2</a></li><li><a class="toc-level-4" href="#分析" level="4">分析</a></li><li><a class="toc-level-4" href="#解决" level="4">解决</a></li><li><a class="toc-level-4" href="#其他问题" level="4">其他问题</a></li><li><a class="toc-level-4" href="#分析&amp;解决" level="4">分析&amp;解决</a></li></ul></li><li><a class="toc-level-2" href="#其他" level="2">其他</a></li><li><a class="toc-level-2" href="#资料" level="2">资料</a><ul></ul></li></ul></div>
+
+
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>统计局，三个节点配置一样：</p>
+<ul>
+<li>内存：500+G</li>
+<li>CPU：4*13 core</li>
+</ul>
+<p>Cassandra 、kaiorsdb  、指标库都是以集群模式部署在三台机器上。</p>
+<h2 id="问题-amp-分析-amp-解决"><a href="#问题-amp-分析-amp-解决" class="headerlink" title="问题&amp;分析&amp;解决"></a>问题&amp;分析&amp;解决</h2><h4 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h4><p>统计局 monitor线上环境 统计报表和仪表盘部分加载缓慢，加载时间在8秒左右。</p>
+<img src="/2017/09/28/170928/load_time.png" title="加载时间1">
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>首先看了指标库的reader 模块日志，发现query 大量timeout异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">17-09-22 14:12:29.208 WARN  [DubboServerHandler-10.6.143.124:7513-thread-576] [c.a.d.rpc.filter.TimeoutFilter]  [DUBBO] invoke time out. method: queryarguments: [e10adc3949ba59abbe56e057f20f88dd, DatapointQuery&#123;metric=&apos;system.mem.pct_usage&apos;, time=DatapointQueryTime&#123;start=1506060435275, end=1506060735275, interval=1, interval_unit=&apos;seconds&apos;, aggregator=AVG, align_start_time=false, align_sampling=false&#125;, tags=&#123;tenantId=e10adc3949ba59abbe56e057f20f88dd&#125;, groupBy=DatapointQueryGroupBy&#123;tagKeys=[object]&#125;, useCache=false&#125;] , url is dubbo://10.6.143.124:7513/uyun.indian.reader.api.ReaderService?anyhost=true&amp;application=indian-reader&amp;default.accepts=1000&amp;default.threadpool=cached&amp;default.threads=500&amp;default.timeout=5000&amp;dubbo=2.8.4.170831&amp;generic=false&amp;interface=uyun.indian.reader.api.ReaderService&amp;methods=queryByResId,query,queryAllMetrics,queryTags&amp;pid=20707&amp;revision=api&amp;serialization=kryo&amp;side=provider&amp;timestamp=1505982696415, invoke elapsed 6361 ms., dubbo version: 2.8.4.170831, current host: 10.6.143.124</span><br><span class="line">17-09-22 14:13:00.201 WARN  [DubboServerHandler-10.6.143.124:7513-thread-568] [c.a.d.rpc.filter.TimeoutFilter]  [DUBBO] invoke time out. method: queryAllMetricsarguments: [e10adc3949ba59abbe56e057f20f88dd] , url is dubbo://10.6.143.124:7513/uyun.indian.reader.api.ReaderService?anyhost=true&amp;application=indian-reader&amp;default.accepts=1000&amp;default.threadpool=cached&amp;default.threads=500&amp;default.timeout=5000&amp;dubbo=2.8.4.170831&amp;generic=false&amp;interface=uyun.indian.reader.api.ReaderService&amp;methods=queryByResId,query,queryAllMetrics,queryTags&amp;pid=20707&amp;revision=api&amp;serialization=kryo&amp;side=provider&amp;timestamp=1505982696415, invoke elapsed 6939 ms., dubbo version: 2.8.4.170831, current host: 10.6.143.124</span><br></pre></td></tr></table></figure>
+<h4 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h4><p>query 使用的 kairosdb的读方法。<a href="https://github.com/kairosdb/kairosdb/wiki/Query-Performance" target="_blank" rel="noopener">kairosdb wiki</a>上指出，当指标的 tag/value 组合太大时，查询时将变得非常缓慢。<br>而monitor报表 每次查询需要汇聚一天的数据。一天的指标数据量和读取时间如下：</p>
+
+<p>一种解决方法是使用<a href="https://github.com/zachm/tscached" target="_blank" rel="noopener">TScached</a>进行读取，tscached 是kairosdb 的一个缓存代理，加载速度可以是kairosdb的100倍（这是它自己说的，感觉有点夸张了）。<br>指标库之前已经配置过 TScached，后来停用了。重新启用后，报表的加载速度明显加快，不再报超时。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">17-09-28 10:01:26.123 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] ********************* start report 2017-09-28 09:56:26 to 2017-09-28 10:01:26 *********************</span><br><span class="line">17-09-28 10:01:26.131 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] methodName=uyun.indian.reader.impl.KairosdbReader, count=320, min=16ms, max=1496ms, avg=116.33ms, median=66.00ms, p75=156.00ms, p95=278.95ms, p99=889.79ms</span><br><span class="line">17-09-28 10:01:26.133 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] methodName=uyun.indian.reader.impl.ReaderServiceImpl.query, count=592, min=16ms, max=1732ms, avg=105.24ms, median=62.00ms, p75=105.00ms, p95=276.05ms, p99=936.27ms</span><br><span class="line">17-09-28 10:01:26.133 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] methodName=uyun.indian.reader.impl.ReaderServiceImpl.queryAllMetrics, count=1, min=4ms, max=4ms, avg=4.00ms, median=4.00ms, p75=4.00ms, p95=4.00ms, p99=4.00ms</span><br><span class="line">17-09-28 10:01:26.134 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] methodName=uyun.indian.reader.impl.ReaderServiceImpl.queryByResId, count=2, min=2ms, max=40ms, avg=21.00ms, median=21.00ms, p75=40.00ms, p95=40.00ms, p99=40.00ms</span><br><span class="line">17-09-28 10:01:26.134 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] methodName=uyun.indian.reader.impl.ReaderServiceImpl.queryTags, count=4, min=37ms, max=38ms, avg=37.50ms, median=37.50ms, p75=38.00ms, p95=38.00ms, p99=38.00ms</span><br><span class="line">17-09-28 10:01:26.135 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] methodName=uyun.indian.reader.impl.TScachedReader, count=272, min=22ms, max=1732ms, avg=91.88ms, median=57.00ms, p75=75.75ms, p95=241.05ms, p99=1092.88ms</span><br><span class="line">17-09-28 10:01:26.135 INFO  [reporter-thread-1   ] [u.i.method.elapsedtime.report ] ********************* end report *********************</span><br></pre></td></tr></table></figure>
+<h4 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h4><p>query 方法速度上来之后，发现queryAllMetrics 方法出现超时现象，按问题1的解决办法处理后，发现仍有问题，后改用读redis 缓存的方式后，暂时解决。<br>但Cassandra的资源消耗仍比较大</p>
+<img src="/2017/09/28/170928/cassandra1.png" title="Cassandra 资源消耗">
+<img src="/2017/09/28/170928/cassandra2.png" title="Cassandra 资源消耗">
+<h4 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h4><p>查看Cassandra system日志后发现 kairosdb.data_points 表中存在大量<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlAboutDeletes.html" target="_blank" rel="noopener">tombstone</a>(墓碑)数据警告，严重影响了Cassandra性能。需对Cassandra 进行数据<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlHowDataMaintain.html" target="_blank" rel="noopener">compact</a>(压实)操作，以清除墓碑数据。<br>在对数据进行压实操作之前，需要先<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/operations/opsRepairNodesManualRepair.html" target="_blank" rel="noopener">repair</a>(修复)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WARN  [SharedPool-Worker-30] 2017-09-26 15:48:50,818 ReadCommand.java:481 - Read 1024 live rows and 22072 tombstone cells for query SELECT value FROM kairosdb.data_points WHERE key = 65313061646333393439626135396162626535366530353766323066383864647e73797374656d2e6e65742e62797465735f72637664000000015dc970d000000d6b6169726f735f646f75626c656465766963653d6962313a686f73743d646d3031646261646d30342e73746174732e676f762e636e3a69703d31302e362e3133342e38303a6f626a6563743d3539383763643931633633396438613830633433653631383a74656e616e7449643d65313061646333393439626135396162626535366530353766323066383864643a AND column1 &gt;= 00000000 AND column1 &lt;= 9dd94 (see tombstone_warn_threshold)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在Cassandra中，一切都是写入，包括逻辑删除数据，当你删除一条数据时，其实是给这条数据进行update，给它update上一个标识，就是一个墓碑标识。 当Cassandra集群在不同节点之间同步删除信息的时候，也会用到Tombstones(墓碑)，可以说墓碑是一种允许Cassandra快速写入的机制。 </p>
+</blockquote>
+<p>关于Cassandra 如何维护数据，可参考  <a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlHowDataMaintain.html" target="_blank" rel="noopener">Cassandra 数据维护官方文档</a></p>
+<h4 id="解决-1"><a href="#解决-1" class="headerlink" title="解决"></a>解决</h4><p>具体压实步骤如下：</p>
+<ol>
+<li>cassandra 默认压缩周期为10天，首先将压缩周期设为1天，设置 gc_grace_seconds 参数，</li>
+</ol>
+<p>登录Cassandra:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./cqlsh host -u user -p pswd</span><br></pre></td></tr></table></figure>
+<p>设置kairosdb的表的压缩周期设为 一天（86400 s）: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">alter table kairosdb.string_index with gc_grace_seconds = 86400;alter table kairosdb.data_points with GC_GRACE_SECONDS = 86400;alter table kairosdb.row_key_index with GC_GRACE_SECONDS = 86400;</span><br><span class="line"></span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">设置完后 ，运行`DESC kairosdb;`，可以看到 **gc_grace_seconds**已被设为86400；</span><br></pre></td></tr></table></figure>
+<p>CREATE TABLE kairosdb.string_index (<br>    key blob,<br>    column1 text,<br>    value blob,<br>    PRIMARY KEY (key, column1)<br>) WITH COMPACT STORAGE<br>    AND CLUSTERING ORDER BY (column1 ASC)<br>    AND bloom_filter_fp_chance = 0.01<br>    AND caching = {‘keys’: ‘ALL’, ‘rows_per_partition’: ‘NONE’}<br>    AND comment = ‘’<br>    AND compaction = {‘class’: ‘org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy’, ‘max_threshold’: ‘32’, ‘min_threshold’: ‘4’}<br>    AND compression = {‘chunk_length_in_kb’: ‘64’, ‘class’: ‘org.apache.cassandra.io.compress.LZ4Compressor’}<br>    AND crc_check_chance = 1.0<br>    AND dclocal_read_repair_chance = 0.1<br>    AND default_time_to_live = 0<br>     AND gc_grace_seconds = 86400<br>    AND max_index_interval = 2048<br>    AND memtable_flush_period_in_ms = 0<br>    AND min_index_interval = 128<br>    AND read_repair_chance = 1.0<br>    AND speculative_retry = ‘NONE’;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">2.  为了统一各个节点的墓碑数据，需在各个节点上分别运行修复kairosdb下各个表，防止已删除数据重生;</span><br></pre></td></tr></table></figure>
+<p>nodetool  repair kairosdb row_key_index<br>nodetool  repair kairosdb string_index<br>nodetool  repair kairosdb data_points<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">*此处运行修复时，三个节点的data_points表由于数据太大，一直没有完全修复成功（some repair failed ）。由于数据量较大，且接受删掉的数据再次恢复，此处采取的措施是忽略该表。</span><br><span class="line"></span><br><span class="line">3.  修复完后再分别进行压实操作:</span><br></pre></td></tr></table></figure></p>
+<p>nodetool  compact  kairosdb row_key_index<br>nodetool  compact  kairosdb string_index<br>nodetool  compact  kairosdb data_points<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">压实操作可用`nodetool  compactionstats` 和 `nodetool  compactionhistory`分别查看当前和历史的压实造作;</span><br><span class="line"></span><br><span class="line">&#123;% asset_img compactionstats.png 压实状态 %&#125;</span><br><span class="line"></span><br><span class="line">4.  开启自动压实操作（默认已开启）：`nodetool enableautocompaction` </span><br><span class="line"></span><br><span class="line">操作完后，Cassandra 会自动压缩一些其他表的数据。结束后，Cassandra 日志中data_points表 墓碑警告记录墓碑数量大幅变小，可以发现Cassandra对资源的占用变到正常水平。 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 其他问题</span><br><span class="line"></span><br><span class="line">1.  cassandra 日志报：</span><br><span class="line"></span><br><span class="line">``</span><br><span class="line"> INFO  [IndexSummaryManager:1] 2017-09-28 08:16:56,278 IndexSummaryRedistribution.java:74 - Redistributing index summaries</span><br><span class="line"> INFO  [SharedPool-Worker-1] 2017-09-28 08:19:46,973 NoSpamLogger.java:91 - Maximum memory usage reached (536870912 bytes), cannot allocate chunk of 1048576 bytes</span><br><span class="line">``</span><br><span class="line"></span><br><span class="line">2.  Dubbo 消费者报：No provider available for the service。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 分析&amp;解决</span><br><span class="line"></span><br><span class="line">1.  调查得知，原因是file_cache_size_in_mb较小，文档中描述该参数是用来读[SSTables](https://stackoverflow.com/questions/2576012/what-is-an-sstable)(Sorted Strings Table , is a file of key/value string pairs, sorted by keys)的缓冲区：</span><br><span class="line">&gt;file_cache_size_in_mb :(Default: Smaller of 1/4 heap or 512) Total memory to use for SSTable-reading buffers.</span><br><span class="line"></span><br><span class="line">调到1024 （M）后，不再报该问题</span><br><span class="line"></span><br><span class="line">2.  服务注册不到zookeeper 上，猜测可能是机器IO负载太大。</span><br><span class="line">执行`netstat -nat | awk &apos;&#123;print $6&#125;&apos; | sort | uniq -c | sort -n` ，可以看到 CLOSE_WAIT 连接太多：</span><br></pre></td></tr></table></figure></p>
+<p>[root@Uyun-DB2 logs]# netstat -nat | awk ‘{print $6}’ | sort | uniq -c | sort -n<br>      1 established)<br>      1 Foreign<br>      2 TIME_WAIT<br>     47 LISTEN<br>   1088 ESTABLISHED<br>   3314 CLOSE_WAIT<br><code>`</code></p>
+<p><code>netstat -nat | grep CLOSE_WAIT</code> 后，发现是kairosdb 造成的（猜测是之前Cassandra负载太大造成 ），强行重启kairosdb 后，再启动指标库，服务正常。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ol>
+<li><p>kairosDB 作者建议采用<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlHowDataMaintain.html#dmlHowDataMaintain__dtcs-compaction" target="_blank" rel="noopener">DateTieredCompactionStrategy</a> (DTCS)压实策略，参考 <a href="https://github.com/kairosdb/kairosdb/issues/23" target="_blank" rel="noopener">kairosDB Issue 23</a>。需要进一步研究。</p>
+</li>
+<li><p>还是会有 Cassandra 占CPU较高的现象，但日志正常，需要进一步研究。</p>
+</li>
+</ol>
+<h2 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h2><p><a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlHowDataMaintain.html" target="_blank" rel="noopener">Cassandra–How is data maintained</a></p>
+<p><a href="http://blog.csdn.net/nangongyanya/article/details/54018104" target="_blank" rel="noopener">操作Cassandra（3）-合并、压实</a></p>
+<p><a href="http://www.cnblogs.com/didda/p/4728588.html" target="_blank" rel="noopener">Cassandra 的压缩策略STCS，LCS 和 DTCS</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/public/tags/kairosdb/" rel="tag"># kairosdb</a>
+          
+            <a href="/public/tags/cassandra/" rel="tag"># cassandra</a>
+          
+            <a href="/public/tags/TScached/" rel="tag"># TScached</a>
+          
+            <a href="/public/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/24/170924/" rel="next" title="使用jekyll 搭建一个github page">
+                <i class="fa fa-chevron-left"></i> 使用jekyll 搭建一个github page
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/22/171022/" rel="prev" title="Cassandra 常用命令合集">
+                Cassandra 常用命令合集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+     <div id="gitalk-container"></div>
+  
+
+
+
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="jason song" />
+            
+              <p class="site-author-name" itemprop="name">jason song</p>
+              <p class="site-description motion-element" itemprop="description">创造美好！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件BLOG" target="_blank">阿里中间件BLOG</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录-Table-of-Contents"><span class="nav-number">1.</span> <span class="nav-text"> 目录 (Table of Contents)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题-amp-分析-amp-解决"><span class="nav-number">3.</span> <span class="nav-text">问题&amp;分析&amp;解决</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题1"><span class="nav-number">3.0.1.</span> <span class="nav-text">问题1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">3.0.2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决"><span class="nav-number">3.0.3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题2"><span class="nav-number">3.0.4.</span> <span class="nav-text">问题2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析-1"><span class="nav-number">3.0.5.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决-1"><span class="nav-number">3.0.6.</span> <span class="nav-text">解决</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资料"><span class="nav-number">5.</span> <span class="nav-text">资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jason song</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk@1.4.0/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk@1.4.0/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'e63b8326d9a6abc9a2d9',
+          clientSecret: 'e73da3e3c426978cdd409ce8f7fafa38f135145c',
+          repo: 'gitTalk.git',
+          owner: 'JasonSongHoho',
+          admin: ['JasonSongHoho'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
