@@ -591,9 +591,21 @@
 
 
 
-<!-- Gitalk 评论 start  -->
 
-<!-- Gitalk end -->
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'e63b8326d9a6abc9a2d9',
+          clientSecret: 'e73da3e3c426978cdd409ce8f7fafa38f135145c',
+          repo: 'https://github.com/JasonSongHoho/gitTalk.git',
+          owner: 'JasonSongHoho',
+          admin: ['JasonSongHoho'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
 
 
 
