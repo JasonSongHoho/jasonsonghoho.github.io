@@ -8,20 +8,20 @@ subtitle:
 description: 创造美好！
 keywords:
 author: jason song
-language: zh-hans
+language: zh-Hans
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://jasonsonghoho.github.io/
-root: /public
+url: https://jasonsonghoho.github.io
+root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
 # Directory
 source_dir: source
 public_dir: public
-tag_dir: tags
+tag_dir: public/tags
 archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
@@ -75,9 +75,19 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: next
 
+rss: /atom.xml
+
+stylus:
+  compress: true
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
   repo:
     github: git@github.com:JasonSongHoho/jasonsonghoho.github.io.git,master
+
+plugins: hexo-generate-feed
+
+links_title: links
+links:
+  阿里中间件BLOG: http://jm.taobao.org/
