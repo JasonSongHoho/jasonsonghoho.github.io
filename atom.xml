@@ -43,4 +43,32 @@
     
   </entry>
   
+  <entry>
+    <title>linux 进程 性能监控</title>
+    <link href="https://jasonsonghoho.github.io/2017/11/18/linux-%E8%BF%9B%E7%A8%8B-%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/"/>
+    <id>https://jasonsonghoho.github.io/2017/11/18/linux-进程-性能监控/</id>
+    <published>2017-11-18T14:08:41.000Z</published>
+    <updated>2018-09-20T14:17:40.924Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>进行性能测试，需要统计 kairosdb 的性能随时间的变化情况。</p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>考虑过以下方法<br>sar 命令：可以检测机器的各项性能，但不能看进程的性能占用信息<br>top：可以监控到进程的性能信息，但没有趋势图<br>jvisualvm：可以监控到进程的性能信息，有趋势图；但可监控的时间范围受限、不能统计各项状态信息。如下：</p><p><img src="!--￼0--&gt;/171108/image2017-11-8 19_14_27.png" alt="jvisualvm"></p><p>最终发现jconsole 可以完美实现这个需求。之前只是感觉jconsoleg功能不如jvisualvm强大，所以没有去看…</p><h2 id="jconsole-使用方法："><a href="#jconsole-使用方法：" class="headerlink" title="jconsole 使用方法："></a>jconsole 使用方法：</h2><ol><li><p>修改远程机器JDK配置文件 (我这里远程机器是linux).<br>a.进入JAVA_HOME\jre\lib\management\目录<br>b.拷贝jmxremote.password.template这个文件到当前目录, 并改名为 jmxremote.password<br>  c.打开jmxremote.password文件，去掉 # monitorRole  QED 和 # controlRole  R&amp;D 这两行前面的注释符号</p></li><li><p>修改远程机器上需要被监控的程序的启动脚本：</p><p> <code>JAVA_OPTS=&quot;-Djava.rmi.server.hostname=10.1.61.117 -Dcom.sun.management.jmxremote.port=18999  -Dcom.sun.management.jmxremote.ssl=false  -Dcom.sun.management.jmxremote.authenticate=false&quot;</code></p><p> 启动脚本 的java 命令后加上 $JAVA_OPTS 参数。</p></li><li><p>本地建立连接，如下：</p></li></ol><p><img src="!--￼1--&gt;/171108/image2017-11-8 19_23_5.png" alt="本地建立连接"></p><p>界面如下：</p><p><img src="!--￼2--&gt;/171108/image2017-11-8 19_28_49.png" alt="界面"></p><p>更多功能可自行尝试</p><p>可以保存统计数据 到本地(CSV 文件)，如下：</p><p><img src="!--￼3--&gt;/171108/image2017-11-8 19_29_20.png" alt="保存统计数据"></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>需求解决 （真是踏破铁鞋无觅处…）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;进行性能测试，需要统计 kairosdb 的性能随时间的变化情况。&lt;/p&gt;
+&lt;h2 id=&quot;分析&quot;&gt;&lt;a href=&quot;#分析&quot; class=
+      
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://jasonsonghoho.github.io/categories/Linux/"/>
+    
+    
+      <category term="踩坑记" scheme="https://jasonsonghoho.github.io/public/tags/%E8%B8%A9%E5%9D%91%E8%AE%B0/"/>
+    
+      <category term="java" scheme="https://jasonsonghoho.github.io/public/tags/java/"/>
+    
+  </entry>
+  
 </feed>
