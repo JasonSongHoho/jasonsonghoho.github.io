@@ -1,0 +1,268 @@
+---
+layout: blogs_default
+title: Metric使用
+subtitle: Metrics是一个给JAVA提供度量工具的包，在JAVA代码中嵌入Metrics代码，可以方便的对业务代码的各个指标进行监控
+date: 2017-12-18 22:08:41
+categories:              
+- 一些中间件 
+tags:
+    - Metric
+    - java
+
+---
+
+
+
+ **目录 (Table of Contents)**
+------------------------------------------------
+
++ 简介
++ MAVEN设置
++ The Registry
++ 五种度量类型
+    + Gauges
+    + Counters
+    + Histograms
+    + Meters
+    + Timers
++ Reporter
++ 健康检查
+
+
+## 简介
+Metrics是一个给JAVA提供度量工具的包，在JAVA代码中嵌入Metrics代码，可以方便的对业务代码的各个指标进行监控。
+Metric 的使用可参考[官网](http://metrics.dropwizard.io/3.2.3/getting-started.html)。
+
+## MAVEN设置
+
+```
+<dependency> 
+    <dependency> 
+        <groupId> io.dropwizard.metrics </ groupId> 
+        <artifactId> metrics-core </ artifactId> 
+        <version> $ {metrics.version} </ version> 
+    </ dependency> 
+</ dependencies>
+```
+
+## The Registry
+Metrics的核心是MetricRegistry类，它是所有应用程序指标的容器。
+
+```
+final MetricRegistry metrics = new MetricRegistry();
+```
+## 五种度量类型
+
+### Gauges
+最基本的度量指标，返回一个值。
+
+```
+public class QueueManager {
+    private final Queue queue;
+
+    public QueueManager(MetricRegistry metrics, String name) {
+        this.queue = new Queue();
+        metrics.register(MetricRegistry.name(QueueManager.class, name, "size"),
+                         new Gauge<Integer>() {
+                             @Override
+                             public Integer getValue() {
+                                 return queue.size();
+                             }
+                         });
+    }
+}
+```
+
+测量此量表时，将返回队列中的任务数量。
+
+在注册表中的每个指标都有一个唯一的名称，例如 "things.count"或"com.example.Thing.latency"。MetricRegistry有一个用于构造这些名字的静态辅助方法：
+
+```
+MetricRegistry.name(QueueManager.class, "jobs", "size")
+```
+
+它将返回一个类似"com.example.QueueManager.jobs.size"的字符串。
+
+###  Counters
+Counters只是一个AtomicLong实例的衡量标准。您可以增加或减少其值。例如，我们可能需要一个更有效的方式来衡量队列中待处理的任务：
+```
+private final Counter pendingJobs = metrics.counter(name(QueueManager.class, "pending-jobs"));
+
+public void addJob(Job job) {
+    pendingJobs.inc();
+    queue.offer(job);
+}
+
+public Job takeJob() {
+    pendingJobs.dec();
+    return queue.take();
+}
+```
+
+每次测量这个计数器时，它都会返回队列中的任务数量。
+
+正如你所看到的，Counters的API略有不同：用 counter(String)而不是 register(String, Metric) 。
+
+
+###  Histograms
+Histograms（直方图 ）统计 数据流中值的分布。除了最小值，最大值，平均值等之外，它还测量中值，第75,90,95,98,99和99.9百分位数。
+
+```
+private final Histogram responseSizes = metrics.histogram(name(RequestHandler.class, "response-sizes"));
+
+public void handleRequest(Request request, Response response) {
+    // etc
+    responseSizes.update(response.getContent().length);
+}
+```
+
+这个直方图将以字节为单位来测量响应的大小。
+###  Meters
+
+Meters测量一段时间内的事件发生率（例如“每秒请求数”）。除了平均速度之外，Meters还跟踪1，5和15分钟的均值。
+```
+private final MetricRegistry metrics = new MetricRegistry();
+private final Meter requests = metrics.meter("requests");
+
+public void handleRequest(Request request, Response response) {
+    requests.mark();
+    // etc
+}
+```
+
+将测量每秒请求的请求率。
+
+###  Timer
+Timer测量一段代码被调用的速率和它的持续时间的分布。
+
+```
+private final Timer responses = metrics.timer(name(RequestHandler.class, "responses"));
+
+public String handleRequest(Request request, Response response) {
+    final Timer.Context context = responses.time(); //相当于Meter.mark()
+    try {
+        // etc;
+        return "OK";
+    } finally {
+        context.stop();
+    }
+}
+```
+该Timer 将测量处理每个请求所需的时间（以纳秒为单位），并提供每秒请求的请求速率。
+
+Timer 其实是 Histogram 和 Meter 的结合
+##  Reporter 
+报表，用于展示统计结果
+
+1. 通过JMX报告Metric
+```
+final JmxReporter reporter = JmxReporter.forRegistry(registry).build();
+reporter.start();
+```
+2. STDOUT, using ConsoleReporter from metrics-core
+```
+final ConsoleReporter reporter = ConsoleReporter.forRegistry(registry)
+                                                .convertRatesTo(TimeUnit.SECONDS)
+                                                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                                                .build();
+reporter.start(1, TimeUnit.MINUTES);
+```
+3. CSV files, using CsvReporter from metrics-core
+```
+final CsvReporter reporter = CsvReporter.forRegistry(registry)
+                                        .formatFor(Locale.US)
+                                        .convertRatesTo(TimeUnit.SECONDS)
+                                        .convertDurationsTo(TimeUnit.MILLISECONDS)
+                                        .build(new File("~/projects/data/"));
+reporter.start(1, TimeUnit.SECONDS);
+```
+4. SLF4J loggers, using Slf4jReporter from metrics-core
+```
+final Slf4jReporter reporter = Slf4jReporter.forRegistry(registry)
+                                            .outputTo(LoggerFactory.getLogger("com.example.metrics"))
+                                            .convertRatesTo(TimeUnit.SECONDS)
+                                            .convertDurationsTo(TimeUnit.MILLISECONDS)
+                                            .build();
+reporter.start(1, TimeUnit.MINUTES);
+```
+5. Ganglia, using GangliaReporter from metrics-ganglia
+```
+final GMetric ganglia = new GMetric("ganglia.example.com", 8649, UDPAddressingMode.MULTICAST, 1);
+final GangliaReporter reporter = GangliaReporter.forRegistry(registry)
+                                                .convertRatesTo(TimeUnit.SECONDS)
+                                                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                                                .build(ganglia);
+reporter.start(1, TimeUnit.MINUTES);
+```
+6. Graphite, using GraphiteReporter from metrics-graphite
+```
+final Graphite graphite = new Graphite(new InetSocketAddress("graphite.example.com", 2003));
+final GraphiteReporter reporter = GraphiteReporter.forRegistry(registry)
+                                                  .prefixedWith("web1.example.com")
+                                                  .convertRatesTo(TimeUnit.SECONDS)
+                                                  .convertDurationsTo(TimeUnit.MILLISECONDS)
+                                                  .filter(MetricFilter.ALL)
+                                                  .build(graphite);
+reporter.start(1, TimeUnit.MINUTES);
+```
+
+## 健康检查
+度量标准还能够对服务的健康状况进行检查，需要引用metrics-healthchecks模块 。
+
+首先，创建一个新的HealthCheckRegistry实例：
+
+```
+final HealthCheckRegistry healthChecks = new HealthCheckRegistry();
+
+```
+
+其次，实现一个HealthCheck子类：
+
+
+```
+public class DatabaseHealthCheck extends HealthCheck {
+    private final Database database;
+
+    public DatabaseHealthCheck(Database database) {
+        this.database = database;
+    }
+
+    @Override
+    public HealthCheck.Result check() throws Exception {
+        if (database.isConnected()) {
+            return HealthCheck.Result.healthy();
+        } else {
+            return HealthCheck.Result.unhealthy("Cannot connect to " + database.getUrl());
+        }
+    }
+}
+```
+
+然后用Metrics注册它的一个实例：
+
+
+```
+healthChecks.register("postgres", new DatabaseHealthCheck(database));
+
+```
+运行所有注册的健康检查：
+
+```
+final Map<String, HealthCheck.Result> results = healthChecks.runHealthChecks();
+for (Entry<String, HealthCheck.Result> entry : results.entrySet()) {
+    if (entry.getValue().isHealthy()) {
+        System.out.println(entry.getKey() + " is healthy");
+    } else {
+        System.err.println(entry.getKey() + " is UNHEALTHY: " + entry.getValue().getMessage());
+        final Throwable e = entry.getValue().getError();
+        if (e != null) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+度量标准带有预先构建的运行状况检查：ThreadDeadlockHealthCheck使用Java的内置线程死锁检测来确定是否有线程死锁。
+
+
+
