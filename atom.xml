@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jasonsonghoho.github.io/"/>
-  <updated>2018-09-20T15:23:28.340Z</updated>
+  <updated>2018-09-21T16:37:13.433Z</updated>
   <id>https://jasonsonghoho.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL究竟如何解决“不可重复读”和“幻读”的</title>
+    <link href="https://jasonsonghoho.github.io/2018/09/22/MySQL%E7%A9%B6%E7%AB%9F%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E2%80%9C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E2%80%9D%E5%92%8C%E2%80%9C%E5%B9%BB%E8%AF%BB%E2%80%9D%E7%9A%84/"/>
+    <id>https://jasonsonghoho.github.io/2018/09/22/MySQL究竟如何解决“不可重复读”和“幻读”的/</id>
+    <published>2018-09-21T16:35:44.000Z</published>
+    <updated>2018-09-21T16:37:13.433Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/Ej3coEuouPqbzkL0-J8tIQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Ej3coEuouPqbzkL0-J8tIQ</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/Ej3coEuouPqbzkL0-J8tIQ&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/Ej3coEuouPqbzkL
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://jasonsonghoho.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="mysql" scheme="https://jasonsonghoho.github.io/public/tags/mysql/"/>
+    
+  </entry>
   
   <entry>
     <title>我们为提升 Cassandra 读性能做了哪些努力？</title>
@@ -262,9 +289,9 @@
       <category term="大数据" scheme="https://jasonsonghoho.github.io/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="spark" scheme="https://jasonsonghoho.github.io/public/tags/spark/"/>
-    
       <category term="大数据" scheme="https://jasonsonghoho.github.io/public/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="spark" scheme="https://jasonsonghoho.github.io/public/tags/spark/"/>
     
   </entry>
   
