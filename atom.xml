@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jasonsonghoho.github.io/"/>
-  <updated>2018-09-21T15:40:34.698Z</updated>
+  <updated>2018-09-20T15:23:28.340Z</updated>
   <id>https://jasonsonghoho.github.io/</id>
   
   <author>
@@ -15,28 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>test</title>
-    <link href="https://jasonsonghoho.github.io/2018/09/21/test/"/>
-    <id>https://jasonsonghoho.github.io/2018/09/21/test/</id>
-    <published>2018-09-21T15:40:14.000Z</published>
-    <updated>2018-09-21T15:40:34.698Z</updated>
-    
-    <content type="html"><![CDATA[<p>test<br>testtesttest</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;test&lt;br&gt;testtesttest&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>我们为提升 Cassandra 读性能做了哪些努力？</title>
