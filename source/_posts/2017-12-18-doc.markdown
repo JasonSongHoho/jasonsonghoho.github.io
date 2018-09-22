@@ -4,7 +4,7 @@ title: Metric使用
 subtitle: Metrics是一个给JAVA提供度量工具的包，在JAVA代码中嵌入Metrics代码，可以方便的对业务代码的各个指标进行监控
 date: 2017-12-18 22:08:41
 categories:              
-- 一些中间件 
+- 中间件 
 tags:
     - Metric
     - java
