@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jasonsonghoho.github.io/"/>
-  <updated>2018-09-21T16:37:13.433Z</updated>
+  <updated>2018-09-22T02:33:29.034Z</updated>
   <id>https://jasonsonghoho.github.io/</id>
   
   <author>
@@ -17,11 +17,94 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Java 7 HashMap 源码解读</title>
+    <link href="https://jasonsonghoho.github.io/2018/08/18/Java-7-HashMap-%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"/>
+    <id>https://jasonsonghoho.github.io/2018/08/18/Java-7-HashMap-源码解读/</id>
+    <published>2018-08-18T02:31:46.000Z</published>
+    <updated>2018-09-22T02:33:29.034Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/nHk9jKapNVVkBDnKChgK0Q" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/nHk9jKapNVVkBDnKChgK0Q</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/nHk9jKapNVVkBDnKChgK0Q&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/nHk9jKapNVVkBDn
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
+    
+      <category term="HashMap" scheme="https://jasonsonghoho.github.io/public/tags/HashMap/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>React快速入门</title>
+    <link href="https://jasonsonghoho.github.io/2018/06/24/React%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/"/>
+    <id>https://jasonsonghoho.github.io/2018/06/24/React快速入门/</id>
+    <published>2018-06-24T02:34:27.000Z</published>
+    <updated>2018-09-22T02:52:12.539Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zf
+      
+    
+    </summary>
+    
+      <category term="前端" scheme="https://jasonsonghoho.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="React" scheme="https://jasonsonghoho.github.io/public/tags/React/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>动物园管理员——ZooKeeper</title>
+    <link href="https://jasonsonghoho.github.io/2018/06/05/%E5%8A%A8%E7%89%A9%E5%9B%AD%E7%AE%A1%E7%90%86%E5%91%98%E2%80%94%E2%80%94ZooKeeper/"/>
+    <id>https://jasonsonghoho.github.io/2018/06/05/动物园管理员——ZooKeeper/</id>
+    <published>2018-06-05T02:35:00.000Z</published>
+    <updated>2018-09-22T02:52:12.560Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/hnfWq1sHD8qxKoXHKwJhiw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/hnfWq1sHD8qxKoXHKwJhiw</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/hnfWq1sHD8qxKoXHKwJhiw&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/hnfWq1sHD8qxKoX
+      
+    
+    </summary>
+    
+      <category term="中间件" scheme="https://jasonsonghoho.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="ZooKeeper" scheme="https://jasonsonghoho.github.io/public/tags/ZooKeeper/"/>
+    
+  </entry>
+  
+  <entry>
     <title>MySQL究竟如何解决“不可重复读”和“幻读”的</title>
-    <link href="https://jasonsonghoho.github.io/2018/09/22/MySQL%E7%A9%B6%E7%AB%9F%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E2%80%9C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E2%80%9D%E5%92%8C%E2%80%9C%E5%B9%BB%E8%AF%BB%E2%80%9D%E7%9A%84/"/>
-    <id>https://jasonsonghoho.github.io/2018/09/22/MySQL究竟如何解决“不可重复读”和“幻读”的/</id>
-    <published>2018-09-21T16:35:44.000Z</published>
-    <updated>2018-09-21T16:37:13.433Z</updated>
+    <link href="https://jasonsonghoho.github.io/2018/05/27/MySQL%E7%A9%B6%E7%AB%9F%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E2%80%9C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E2%80%9D%E5%92%8C%E2%80%9C%E5%B9%BB%E8%AF%BB%E2%80%9D%E7%9A%84/"/>
+    <id>https://jasonsonghoho.github.io/2018/05/27/MySQL究竟如何解决“不可重复读”和“幻读”的/</id>
+    <published>2018-05-26T16:35:44.000Z</published>
+    <updated>2018-09-22T02:30:44.066Z</updated>
     
     <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/Ej3coEuouPqbzkL0-J8tIQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Ej3coEuouPqbzkL0-J8tIQ</a></p>]]></content>
     
@@ -71,11 +154,179 @@
   </entry>
   
   <entry>
+    <title>Linux中的top命令详解</title>
+    <link href="https://jasonsonghoho.github.io/2018/05/20/Linux%E4%B8%AD%E7%9A%84top%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://jasonsonghoho.github.io/2018/05/20/Linux中的top命令详解/</id>
+    <published>2018-05-20T02:41:23.000Z</published>
+    <updated>2018-09-22T02:52:12.563Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/xyYn6xaahQ4hv1y9MM-7JA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/xyYn6xaahQ4hv1y9MM-7JA</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/xyYn6xaahQ4hv1y9MM-7JA&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/xyYn6xaahQ4hv1y
+      
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://jasonsonghoho.github.io/categories/Linux/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="Linux" scheme="https://jasonsonghoho.github.io/public/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 的 Cache、Buffer、MemAvailable、Swap简介</title>
+    <link href="https://jasonsonghoho.github.io/2018/05/20/Linux-%E7%9A%84-Cache%E3%80%81Buffer%E3%80%81MemAvailable%E3%80%81Swap%E7%AE%80%E4%BB%8B/"/>
+    <id>https://jasonsonghoho.github.io/2018/05/20/Linux-的-Cache、Buffer、MemAvailable、Swap简介/</id>
+    <published>2018-05-20T02:40:08.000Z</published>
+    <updated>2018-09-22T02:52:12.543Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/59oH1hMMXy6YC618gZkm1g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/59oH1hMMXy6YC618gZkm1g</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/59oH1hMMXy6YC618gZkm1g&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/59oH1hMMXy6YC61
+      
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://jasonsonghoho.github.io/categories/Linux/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="Linux" scheme="https://jasonsonghoho.github.io/public/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>克拉丝的面试</title>
+    <link href="https://jasonsonghoho.github.io/2018/05/13/%E5%85%8B%E6%8B%89%E4%B8%9D%E7%9A%84%E9%9D%A2%E8%AF%95/"/>
+    <id>https://jasonsonghoho.github.io/2018/05/13/克拉丝的面试/</id>
+    <published>2018-05-13T02:39:39.000Z</published>
+    <updated>2018-09-22T02:52:46.942Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU_mAUWbA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU_mAUWbA</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU_mAUWbA&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="JVM" scheme="https://jasonsonghoho.github.io/public/tags/JVM/"/>
+    
+      <category term="类加载" scheme="https://jasonsonghoho.github.io/public/tags/%E7%B1%BB%E5%8A%A0%E8%BD%BD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>工厂模式、简单工厂模式与抽象工厂模式</title>
+    <link href="https://jasonsonghoho.github.io/2018/05/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E3%80%81%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jasonsonghoho.github.io/2018/05/10/工厂模式、简单工厂模式与抽象工厂模式/</id>
+    <published>2018-05-10T02:39:16.000Z</published>
+    <updated>2018-09-22T02:52:12.556Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/ccNz_veqyb4UYBpH-UpZfA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/ccNz_veqyb4UYBpH-UpZfA</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/ccNz_veqyb4UYBpH-UpZfA&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/ccNz_veqyb4UYBp
+      
+    
+    </summary>
+    
+      <category term="设计模式" scheme="https://jasonsonghoho.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="设计模式" scheme="https://jasonsonghoho.github.io/public/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>园丁与盆栽（JVM 垃圾回收）</title>
+    <link href="https://jasonsonghoho.github.io/2018/05/01/%E5%9B%AD%E4%B8%81%E4%B8%8E%E7%9B%86%E6%A0%BD/"/>
+    <id>https://jasonsonghoho.github.io/2018/05/01/园丁与盆栽/</id>
+    <published>2018-05-01T02:38:55.000Z</published>
+    <updated>2018-09-22T02:52:12.553Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3PnfJQixg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3PnfJQixg</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3PnfJQixg&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3P
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="JVM" scheme="https://jasonsonghoho.github.io/public/tags/JVM/"/>
+    
+      <category term="GC" scheme="https://jasonsonghoho.github.io/public/tags/GC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>克拉丝的JVM工厂之旅（上）</title>
+    <link href="https://jasonsonghoho.github.io/2018/04/15/%E5%85%8B%E6%8B%89%E4%B8%9D%E7%9A%84JVM%E5%B7%A5%E5%8E%82%E4%B9%8B%E6%97%85%EF%BC%88%E4%B8%8A%EF%BC%89/"/>
+    <id>https://jasonsonghoho.github.io/2018/04/15/克拉丝的JVM工厂之旅（上）/</id>
+    <published>2018-04-15T02:37:32.000Z</published>
+    <updated>2018-09-22T02:52:12.549Z</updated>
+    
+    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/X_tO5Lgjof_RTlyN_xtSHw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/X_tO5Lgjof_RTlyN_xtSHw</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/X_tO5Lgjof_RTlyN_xtSHw&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/X_tO5Lgjof_RTly
+      
+    
+    </summary>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
+    
+    
+      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="JVM" scheme="https://jasonsonghoho.github.io/public/tags/JVM/"/>
+    
+      <category term="类加载" scheme="https://jasonsonghoho.github.io/public/tags/%E7%B1%BB%E5%8A%A0%E8%BD%BD/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Metric使用</title>
     <link href="https://jasonsonghoho.github.io/2017/12/18/2017-12-18-doc/"/>
     <id>https://jasonsonghoho.github.io/2017/12/18/2017-12-18-doc/</id>
     <published>2017-12-18T14:08:41.000Z</published>
-    <updated>2018-09-20T15:23:28.320Z</updated>
+    <updated>2018-09-22T02:49:05.202Z</updated>
     
     <content type="html"><![CDATA[<h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><ul><li>简介</li><li>MAVEN设置</li><li>The Registry</li><li>五种度量类型<ul><li>Gauges</li><li>Counters</li><li>Histograms</li><li>Meters</li><li>Timers</li></ul></li><li>Reporter</li><li>健康检查</li></ul><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Metrics是一个给JAVA提供度量工具的包，在JAVA代码中嵌入Metrics代码，可以方便的对业务代码的各个指标进行监控。<br>Metric 的使用可参考<a href="http://metrics.dropwizard.io/3.2.3/getting-started.html" target="_blank" rel="noopener">官网</a>。</p><h2 id="MAVEN设置"><a href="#MAVEN设置" class="headerlink" title="MAVEN设置"></a>MAVEN设置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt; </span><br><span class="line">    &lt;dependency&gt; </span><br><span class="line">        &lt;groupId&gt; io.dropwizard.metrics &lt;/ groupId&gt; </span><br><span class="line">        &lt;artifactId&gt; metrics-core &lt;/ artifactId&gt; </span><br><span class="line">        &lt;version&gt; $ &#123;metrics.version&#125; &lt;/ version&gt; </span><br><span class="line">    &lt;/ dependency&gt; </span><br><span class="line">&lt;/ dependencies&gt;</span><br></pre></td></tr></table></figure><h2 id="The-Registry"><a href="#The-Registry" class="headerlink" title="The Registry"></a>The Registry</h2><p>Metrics的核心是MetricRegistry类，它是所有应用程序指标的容器。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final MetricRegistry metrics = new MetricRegistry();</span><br></pre></td></tr></table></figure><h2 id="五种度量类型"><a href="#五种度量类型" class="headerlink" title="五种度量类型"></a>五种度量类型</h2><h3 id="Gauges"><a href="#Gauges" class="headerlink" title="Gauges"></a>Gauges</h3><p>最基本的度量指标，返回一个值。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class QueueManager &#123;</span><br><span class="line">    private final Queue queue;</span><br><span class="line"></span><br><span class="line">    public QueueManager(MetricRegistry metrics, String name) &#123;</span><br><span class="line">        this.queue = new Queue();</span><br><span class="line">        metrics.register(MetricRegistry.name(QueueManager.class, name, &quot;size&quot;),</span><br><span class="line">                         new Gauge&lt;Integer&gt;() &#123;</span><br><span class="line">                             @Override</span><br><span class="line">                             public Integer getValue() &#123;</span><br><span class="line">                                 return queue.size();</span><br><span class="line">                             &#125;</span><br><span class="line">                         &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>测量此量表时，将返回队列中的任务数量。</p><p>在注册表中的每个指标都有一个唯一的名称，例如 “things.count”或”com.example.Thing.latency”。MetricRegistry有一个用于构造这些名字的静态辅助方法：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MetricRegistry.name(QueueManager.class, &quot;jobs&quot;, &quot;size&quot;)</span><br></pre></td></tr></table></figure><p>它将返回一个类似”com.example.QueueManager.jobs.size”的字符串。</p><h3 id="Counters"><a href="#Counters" class="headerlink" title="Counters"></a>Counters</h3><p>Counters只是一个AtomicLong实例的衡量标准。您可以增加或减少其值。例如，我们可能需要一个更有效的方式来衡量队列中待处理的任务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private final Counter pendingJobs = metrics.counter(name(QueueManager.class, &quot;pending-jobs&quot;));</span><br><span class="line"></span><br><span class="line">public void addJob(Job job) &#123;</span><br><span class="line">    pendingJobs.inc();</span><br><span class="line">    queue.offer(job);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public Job takeJob() &#123;</span><br><span class="line">    pendingJobs.dec();</span><br><span class="line">    return queue.take();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>每次测量这个计数器时，它都会返回队列中的任务数量。</p><p>正如你所看到的，Counters的API略有不同：用 counter(String)而不是 register(String, Metric) 。</p><h3 id="Histograms"><a href="#Histograms" class="headerlink" title="Histograms"></a>Histograms</h3><p>Histograms（直方图 ）统计 数据流中值的分布。除了最小值，最大值，平均值等之外，它还测量中值，第75,90,95,98,99和99.9百分位数。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private final Histogram responseSizes = metrics.histogram(name(RequestHandler.class, &quot;response-sizes&quot;));</span><br><span class="line"></span><br><span class="line">public void handleRequest(Request request, Response response) &#123;</span><br><span class="line">    // etc</span><br><span class="line">    responseSizes.update(response.getContent().length);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这个直方图将以字节为单位来测量响应的大小。</p><h3 id="Meters"><a href="#Meters" class="headerlink" title="Meters"></a>Meters</h3><p>Meters测量一段时间内的事件发生率（例如“每秒请求数”）。除了平均速度之外，Meters还跟踪1，5和15分钟的均值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private final MetricRegistry metrics = new MetricRegistry();</span><br><span class="line">private final Meter requests = metrics.meter(&quot;requests&quot;);</span><br><span class="line"></span><br><span class="line">public void handleRequest(Request request, Response response) &#123;</span><br><span class="line">    requests.mark();</span><br><span class="line">    // etc</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>将测量每秒请求的请求率。</p><h3 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h3><p>Timer测量一段代码被调用的速率和它的持续时间的分布。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private final Timer responses = metrics.timer(name(RequestHandler.class, &quot;responses&quot;));</span><br><span class="line"></span><br><span class="line">public String handleRequest(Request request, Response response) &#123;</span><br><span class="line">    final Timer.Context context = responses.time(); //相当于Meter.mark()</span><br><span class="line">    try &#123;</span><br><span class="line">        // etc;</span><br><span class="line">        return &quot;OK&quot;;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        context.stop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>该Timer 将测量处理每个请求所需的时间（以纳秒为单位），并提供每秒请求的请求速率。</p><p>Timer 其实是 Histogram 和 Meter 的结合</p><h2 id="Reporter"><a href="#Reporter" class="headerlink" title="Reporter"></a>Reporter</h2><p>报表，用于展示统计结果</p><ol><li><p>通过JMX报告Metric</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">final JmxReporter reporter = JmxReporter.forRegistry(registry).build();</span><br><span class="line">reporter.start();</span><br></pre></td></tr></table></figure></li><li><p>STDOUT, using ConsoleReporter from metrics-core</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">final ConsoleReporter reporter = ConsoleReporter.forRegistry(registry)</span><br><span class="line">                                                .convertRatesTo(TimeUnit.SECONDS)</span><br><span class="line">                                                .convertDurationsTo(TimeUnit.MILLISECONDS)</span><br><span class="line">                                                .build();</span><br><span class="line">reporter.start(1, TimeUnit.MINUTES);</span><br></pre></td></tr></table></figure></li><li><p>CSV files, using CsvReporter from metrics-core</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">final CsvReporter reporter = CsvReporter.forRegistry(registry)</span><br><span class="line">                                        .formatFor(Locale.US)</span><br><span class="line">                                        .convertRatesTo(TimeUnit.SECONDS)</span><br><span class="line">                                        .convertDurationsTo(TimeUnit.MILLISECONDS)</span><br><span class="line">                                        .build(new File(&quot;~/projects/data/&quot;));</span><br><span class="line">reporter.start(1, TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure></li><li><p>SLF4J loggers, using Slf4jReporter from metrics-core</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">final Slf4jReporter reporter = Slf4jReporter.forRegistry(registry)</span><br><span class="line">                                            .outputTo(LoggerFactory.getLogger(&quot;com.example.metrics&quot;))</span><br><span class="line">                                            .convertRatesTo(TimeUnit.SECONDS)</span><br><span class="line">                                            .convertDurationsTo(TimeUnit.MILLISECONDS)</span><br><span class="line">                                            .build();</span><br><span class="line">reporter.start(1, TimeUnit.MINUTES);</span><br></pre></td></tr></table></figure></li><li><p>Ganglia, using GangliaReporter from metrics-ganglia</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">final GMetric ganglia = new GMetric(&quot;ganglia.example.com&quot;, 8649, UDPAddressingMode.MULTICAST, 1);</span><br><span class="line">final GangliaReporter reporter = GangliaReporter.forRegistry(registry)</span><br><span class="line">                                                .convertRatesTo(TimeUnit.SECONDS)</span><br><span class="line">                                                .convertDurationsTo(TimeUnit.MILLISECONDS)</span><br><span class="line">                                                .build(ganglia);</span><br><span class="line">reporter.start(1, TimeUnit.MINUTES);</span><br></pre></td></tr></table></figure></li><li><p>Graphite, using GraphiteReporter from metrics-graphite</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">final Graphite graphite = new Graphite(new InetSocketAddress(&quot;graphite.example.com&quot;, 2003));</span><br><span class="line">final GraphiteReporter reporter = GraphiteReporter.forRegistry(registry)</span><br><span class="line">                                                  .prefixedWith(&quot;web1.example.com&quot;)</span><br><span class="line">                                                  .convertRatesTo(TimeUnit.SECONDS)</span><br><span class="line">                                                  .convertDurationsTo(TimeUnit.MILLISECONDS)</span><br><span class="line">                                                  .filter(MetricFilter.ALL)</span><br><span class="line">                                                  .build(graphite);</span><br><span class="line">reporter.start(1, TimeUnit.MINUTES);</span><br></pre></td></tr></table></figure></li></ol><h2 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h2><p>度量标准还能够对服务的健康状况进行检查，需要引用metrics-healthchecks模块 。</p><p>首先，创建一个新的HealthCheckRegistry实例：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final HealthCheckRegistry healthChecks = new HealthCheckRegistry();</span><br></pre></td></tr></table></figure><p>其次，实现一个HealthCheck子类：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class DatabaseHealthCheck extends HealthCheck &#123;</span><br><span class="line">    private final Database database;</span><br><span class="line"></span><br><span class="line">    public DatabaseHealthCheck(Database database) &#123;</span><br><span class="line">        this.database = database;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public HealthCheck.Result check() throws Exception &#123;</span><br><span class="line">        if (database.isConnected()) &#123;</span><br><span class="line">            return HealthCheck.Result.healthy();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return HealthCheck.Result.unhealthy(&quot;Cannot connect to &quot; + database.getUrl());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>然后用Metrics注册它的一个实例：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">healthChecks.register(&quot;postgres&quot;, new DatabaseHealthCheck(database));</span><br></pre></td></tr></table></figure><p>运行所有注册的健康检查：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">final Map&lt;String, HealthCheck.Result&gt; results = healthChecks.runHealthChecks();</span><br><span class="line">for (Entry&lt;String, HealthCheck.Result&gt; entry : results.entrySet()) &#123;</span><br><span class="line">    if (entry.getValue().isHealthy()) &#123;</span><br><span class="line">        System.out.println(entry.getKey() + &quot; is healthy&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        System.err.println(entry.getKey() + &quot; is UNHEALTHY: &quot; + entry.getValue().getMessage());</span><br><span class="line">        final Throwable e = entry.getValue().getError();</span><br><span class="line">        if (e != null) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>度量标准带有预先构建的运行状况检查：ThreadDeadlockHealthCheck使用Java的内置线程死锁检测来确定是否有线程死锁。</p>]]></content>
     
@@ -88,7 +339,7 @@
     
     </summary>
     
-      <category term="一些中间件" scheme="https://jasonsonghoho.github.io/categories/%E4%B8%80%E4%BA%9B%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+      <category term="中间件" scheme="https://jasonsonghoho.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
     
       <category term="java" scheme="https://jasonsonghoho.github.io/public/tags/java/"/>
@@ -102,7 +353,7 @@
     <link href="https://jasonsonghoho.github.io/2017/12/10/171210/"/>
     <id>https://jasonsonghoho.github.io/2017/12/10/171210/</id>
     <published>2017-12-10T14:08:41.000Z</published>
-    <updated>2018-09-21T16:27:31.861Z</updated>
+    <updated>2018-09-22T02:46:04.906Z</updated>
     
     <content type="html"><![CDATA[<p>*本文是从公司内网KB转过来的，格式有点混乱懒得改了QAZ~~</p><h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><ul><li>FAQ</li><li>一、测试目的</li><li>二、测试环境</li><li>三、测试方法</li><li>四、测试结果<ul><li>写:</li><li>读：</li></ul></li><li>五、结论<ul><li>1、指标库写性能：</li><li>2、指标库读性能：</li></ul></li></ul><p></p><h2 id="id-指标库性能测试-FAQ">FAQ</h2><p></p><p><strong>1.写入能力：多少个15秒监控周期的主机，或180秒监控周期的网络设备的数据写入</strong></p><br><p style="margin-left: 30.0px;">假设现场1个资源每15 S上报100个指标，则每分钟上报400个，</p><br><p style="margin-left: 30.0px;">若部署单节点Cassandra，在redis集群状况良好的情况下，每分钟可写入80W个指标，可支持800000/400=2000个资源左右;</p><br><p style="margin-left: 30.0px;">若部署Cassandra 集群，每分钟可写入110W个指标，可支持1100000/400=2750个资源左右;</p><br><p style="margin-left: 30.0px;">考虑到稳定性可酌情减少资源量或增加配置。</p><br><p><strong>2.读出能力：每秒完成指定数据点数查询的TPS性能峰值，以便预测可以支持什么数量的仪表盘</strong></p><br><p style="margin-left: 30.0px;">在三台4C*16G的Cassandra节点的配置下，稳定查询的前提下，每分钟至少400条并发请求（每条请求至少6000条元数据，大约为15分钟的数据）。</p><br><p style="margin-left: 30.0px;"></p><br><p></p><br><p></p><br><p></p><br><h2 id="id-指标库性能测试-一、测试目的">一、测试目的</h2><br><p>测试在指定硬件条件下，指标库写入能力与读取能力。</p><br><h2 id="id-指标库性能测试-二、测试环境">二、测试环境</h2><br><div class="table-wrap"><br>    <table class="confluenceTable"><br>        <tbody><br>        <tr><br>            <th class="confluenceTh">ip</th><br>            <th colspan="1" class="confluenceTh">cpu</th><br>            <th class="confluenceTh">内存</th><br>            <th colspan="1" class="confluenceTh">磁盘</th><br>            <th colspan="1" class="confluenceTh">用途</th><br>            <th colspan="1" class="confluenceTh">备注</th><br>        </tr><br>        <tr><br>            <td colspan="1" class="confluenceTd">个人电脑</td><br>            <td colspan="1" class="confluenceTd">4核</td><br>            <td colspan="1" class="confluenceTd">16G</td><br>            <td colspan="1" class="confluenceTd"></td><br>            <td colspan="1" class="confluenceTd"><span>部署jmeter</span></td><br>            <td colspan="1" class="confluenceTd"></td><br>        </tr><br>        <tr><br>            <td colspan="1" class="confluenceTd"><span>10.1.53.37</span></td><br>            <td colspan="1" class="confluenceTd">6<span>核</span></td><br>            <td colspan="1" class="confluenceTd">8G</td><br>            <td colspan="1" class="confluenceTd"></td><br>            <td rowspan="4" class="confluenceTd">部署jmeter-server</td><br>            <td rowspan="4" class="confluenceTd"><p><span>通过jmeter来发送测试请求，</span></p><br>                <p>这些机器同时部署着其他产品。<br><br></p></td><br>        </tr><br>        <tr><br>            <td colspan="1" class="confluenceTd"><span>10.1.53.38</span></td><br>            <td colspan="1" class="confluenceTd"><span>4核</span></td><br>            <td colspan="1" class="confluenceTd">16G</td><br>            <td colspan="1" class="confluenceTd"></td><br>        </tr><br>        <tr><br>            <td colspan="1" class="confluenceTd"><span>10.1.53.65</span></td><br>            <td colspan="1" class="confluenceTd"><span>4核</span></td><br>            <td colspan="1" class="confluenceTd"><span>8G</span></td><br>            <td colspan="1" class="confluenceTd"></td><br>        </tr><br>        <tr><br>            <td colspan="1" class="confluenceTd"><span>10.1.61.10</span></td><br>            <td colspan="1" class="confluenceTd"><span>4核</span></td><br>            <td colspan="1" class="confluenceTd">24G</td><br>            <td colspan="1" class="confluenceTd"></td><br>        </tr><br>        <tr><br>            <td colspan="1" class="confluenceTd">10.1.53.39</td><br>            <td colspan="1" class="confluenceTd"><span>4核</span></td><br>            <td colspan="1" class="confluenceTd">16G</td><br>            <td colspan="1" class="confluenceTd"></td><br>            <td colspan="1" class="confluenceTd">指标库、ES、租户等组件</td><br>            <td colspan="1" class="confluenceTd">该机器主要用来部署指标库</td><br>        </tr><br>        <tr><br>            <td class="confluenceTd">10.1.61.117</td><br>            <td colspan="1" class="confluenceTd">4核</td><br>            <td class="confluenceTd">16G</td><br>            <td colspan="1" class="confluenceTd">38G</td><br>            <td colspan="1" class="confluenceTd">kairosdb、omp等</td><br>            <td colspan="1" class="confluenceTd"><span>kairosdb 堆内存为默认的3g</span></td><br>        </tr><br>        <tr><br>            <td class="confluenceTd">10.1.61.118</td><br>            <td colspan="1" class="confluenceTd">4核</td><br>            <td class="confluenceTd">16G</td><br>            <td colspan="1" class="confluenceTd">38G</td><br>            <td colspan="1" class="confluenceTd">Cassandra</td><br>            <td colspan="1" class="confluenceTd"><p><span>kairosdb 堆内存为<span>为默认的4</span>g，</span></p><br>                <p>计算公式 max(min(1/2 ram, 1024MB),min(1/4 ram, 8GB))</p></td><br>        </tr><br>        </tbody><br>    </table><br></div><br><p></p><br><h2 id="id-指标库性能测试-三、测试方法">三、测试方法</h2><br><p>测试工具为Jmeter，通过调用指标库相应的openApi测试，用jconsole 监控进程占用资源变化。</p><br><h2 id="id-指标库性能测试-四、测试结果">四、测试结果</h2><h4 id="id-指标库性能测试-写:">写:</h4><br><p style="margin-left: 30.0px;"><span>Ramp-up Period <span>决定多长时间启动所有线程。如果使用10个线程，ramp-up period是100秒，那么JMeter用100秒使所有10个线程启动并运行。每个线程会在上一个线程启动后10秒（100/10）启动。</span></span><br></p><br><p style="margin-left: 30.0px;">monitor 指标上报的频率是15S一次，故此处从 以15S/s 的频率启动一个上报线程开始测试。</p><br><p style="margin-left: 30.0px;">如组1，测试逻辑为：</p><br><p style="margin-left: 60.0px;">每15秒启动一个线程，单个线程每次上报25个指标，重复上报500次，每分钟指标写入请求次数为5W条。</p><br><p style="margin-left: 60.0px;">jmeter-server为1，表示只在本机运行测试；若为4，表示在4个机器上同时对指标库发起请求测试。</p><br><p style="margin-left: 30.0px;"></p><br><p></p><br><p></p><br><p style="margin-left: 30.0px;">1.kairosdb 自带写入统计指标：</p><br><p style="margin-left: 60.0px;">kairosdb.metric_counters - Counts the number of data points received since the last<br>    report. Tags are used to separate one metric from another.（统计自上次上报后接收的数据量。标签用于区分指标。）</p><br><p style="margin-left: 60.0px;"></p><br><p style="margin-left: 30.0px;">kairosdb 统计结果：</p><br><p style="margin-left: 30.0px;"><br><img src="/2017/12/10/171210/kairosdb_metric_count.png"><br><br></p><br><p style="margin-left: 30.0px;">“1”处为组别12的测试结果，“2”处为直接调用kairosdb restApi 写入接口，“3”处为组别14 的结果。结果与指标库的统计日志一致。<br><br></p><p style="margin-left: 30.0px;">2.时间有限，每组测试时间间隔较短，因此可能会对CPU、内存以及Cassandra状态产生影响，使结果不够准确。</p><br><p style="margin-left: 30.0px;"></p><br><p style="margin-left: 30.0px;"><strong>注：</strong></p><br><p style="margin-left: 30.0px;">【1】：指标库redis 报内存不够，异常： Can’t save in background: fork: Cannot allocate memory</p><br><p style="margin-left: 30.0px;">【2】：<span style="background-color: transparent;">短时间插入大量指标会导致未压实的sstable数据太多，压实进程报可用磁盘空间不足，重新压实…恶性循环。</span><br></p><br><p style="margin-left: 30.0px;"><span style="background-color: transparent;"><br></span></p><br><div class="code panel pdl" style="border-width: 1px;"><br>    <div class="codeContent panelContent pdl"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;![CDATA[[root@localhost data_points-1e09be40c3c811e7977aa147ea7baf03]# /opt/cassandra/bin/nodetool compactionstats -H</span><br><span class="line">pending tasks: 2</span><br><span class="line">- kairosdb.data_points: 2</span><br><span class="line">id                                   compaction type keyspace table       completed total    unit  progress</span><br><span class="line">ef340e00-d4d8-11e7-a239-0d717928a22e Compaction      kairosdb data_points 6.23 GB   11.42 GB bytes 54.56%</span><br><span class="line">Active compaction remaining time :   0h05m32s</span><br><span class="line">]]&gt;</span><br></pre></td></tr></table></figure><br><br>    </div><br></div><br><p style="margin-left: 30.0px;"><span><br></span></p><br><p style="margin-left: 30.0px;"><span>Cassandra报异常:</span></p><br><div class="code panel pdl" style="border-width: 1px;"><br>    <div class="codeContent panelContent pdl"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;![CDATA[WARN  [CompactionExecutor:46] 2017-11-28 22:26:29,785 CompactionTask.java:91 - insufficient space to compact all requested files BigTableReader(path=&amp;#39;/opt/dbdata/cassandra/data/kairosdb/data_points-1e09be40c3c811e7977aa147ea7baf03/ma-216-big-Data.db&amp;#39;), BigTableReader(path=&amp;#39;/opt/dbdata/cassandra/data/kairosdb/data_points-1e09be40c3c811e7977aa147ea7baf03/ma-237-big-Data.db&amp;#39;)</span><br><span class="line">ERROR [CompactionExecutor:46] 2017-11-28 22:26:29,827 CassandraDaemon.java:195 - Exception in thread Thread[CompactionExecutor:46,1,main]</span><br><span class="line">java.lang.RuntimeException: Not enough space for compaction, estimated sstables = 1, expected write size = 2395303467</span><br><span class="line">at org.apache.cassandra.db.compaction.CompactionTask.checkAvailableDiskSpace(CompactionTask.java:278) ~[apache-cassandra-3.5.jar:3.5]</span><br><span class="line">at org.apache.cassandra.db.compaction.CompactionTask.runMayThrow(CompactionTask.java:126) ~[apache-cassandra-3.5.jar:3.5]</span><br><span class="line">at org.apache.cassandra.utils.WrappedRunnable.run(WrappedRunnable.java:28) ~[apache-cassandra-3.5.jar:3.5]</span><br><span class="line">at org.apache.cassandra.db.compaction.CompactionTask.executeInternal(CompactionTask.java:82) ~[apache-cassandra-3.5.jar:3.5]</span><br><span class="line">at org.apache.cassandra.db.compaction.AbstractCompactionTask.execute(AbstractCompactionTask.java:60) ~[apache-cassandra-3.5.jar:3.5]</span><br><span class="line">at org.apache.cassandra.db.compaction.CompactionManager$BackgroundCompactionCandidate.run(CompactionManager.java:264) ~[apache-cassandra-3.5.jar:3.5]</span><br><span class="line">at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511) ~[na:1.8.0_144]</span><br><span class="line">at java.util.concurrent.FutureTask.run(FutureTask.java:266) ~[na:1.8.0_144]</span><br><span class="line">at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) ~[na:1.8.0_144]</span><br><span class="line">at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_144]</span><br><span class="line">at java.lang.Thread.run(Thread.java:748) [na:1.8.0_144]</span><br><span class="line"></span><br><span class="line">]]&gt;</span><br></pre></td></tr></table></figure><br><br>    </div><br></div><br><p></p><br><p style="margin-left: 30.0px;">解决方法：</p><br><p style="margin-left: 60.0px;">1、增大磁盘空间、</p><br><p style="margin-left: 60.0px;">2、直接删除同一编号的sstable 大文件</p><br><p style="margin-left: 60.0px;">3、重装Cassandra</p><h4 id="id-指标库性能测试-多节点写:">多节点写:</h4><br><p style="margin-left: 30.0px;">1.通过观察发现，写的瓶颈在指标库的gateway，然后增加多节点的测试如下：</p><br><ul><br>    <li style="margin-left: 30.0px;">开启一个gateway、一个writer模块后，指标写入能力在 <strong>50W/分钟</strong>；</li><br>    <li style="margin-left: 30.0px;">开启三个gateway、一个writer模块后，指标写入能力在 <strong>80W/分钟</strong>；</li><br>    <li style="margin-left: 30.0px;">开启三个三个gateway、三个writer 模块后，指标写入能力在 <strong>85W/分钟</strong>。</li><br></ul><br><br><p><br><img src="/2017/12/10/171210/kairosdb_metric_count_70W_75W.png"><br><br></p><p style="margin-left: 30.0px;">2.当部署Cassandra集群（3个节点）后，指标写入能力可以再次提升，<span style="background-color: transparent;">开启三个gateway、一个writer模块，指标写入能力在 <strong>100W/分钟</strong> ，此状态下可持续写入四个小时，期间redis会报内存不够的异常。</span><br></p>&lt;p style=”margin-left: 30.0px; &gt;<br><br><br><p></p><p style="margin-left: 30.0px;"><span style="background-color: transparent;">另外，当指标库写入在满载的情况下，指标的读取能力会受到很大影响，且写入也会偶尔报连接超时现象。</span><br></p><br><p style="margin-left: 30.0px;"><span style="background-color: transparent;"><br></span></p><h4 id="id-指标库性能测试-读："><br>    读：</h4><br><p>指标的查询，其实是kairosdb去查Cassandra中数据。因此kairosdb查Cassandra的速度才是关键因素。而查Cassandra数据的速度，跟查询的Cassandra的row数量、元数据量等因素相关。</p><br><p>要模拟读取测试，就需要先调查现场实际查询的row和元数据大小。</p><br><p>统计局的统计如下：</p><br><p style="margin-left: 30.0px;">上图为密集查询30分钟内指标时，从Cassandra中查询的row的行数；</p><br><p style="margin-left: 30.0px;">中图为密集查询30分钟内指标时，从Cassandra中查询的元数据的数量；</p><br><p style="margin-left: 30.0px;">下图为定时查询时row的行数。</p><br><p><br><br></p><br><p style="margin-left: 30.0px;"><br><img src="/2017/12/10/171210/统计局_query_row_count2.png"><br><br></p><br><p style="margin-left: 30.0px;"></p><br><p style="margin-left: 30.0px;"><br><img src="/2017/12/10/171210/统计局_query_sample_size.png"><br><br></p><br><p style="margin-left: 30.0px;"></p><br><p style="margin-left: 30.0px;"><br><img src="/2017/12/10/171210/统计局_query_row_count.png"><br><br></p><br><p style="margin-left: 30.0px;"></p><br><p style="margin-left: 30.0px;"></p><br><p style="margin-left: 30.0px;">可以看出：</p><br><p style="margin-left: 30.0px;">密集查询时，row最大的在4000，大部分比较小，接近1。定时查询时，row在100行以下。</p><br><p style="margin-left: 30.0px;">现场400个设备，查询30分钟指标时，理论上应该有大约400<em>4</em>30=48000 的元数据，实际查询时，要小于该值。基本都在几百条。</p><br><p></p><br><p></p><p></p><p style="margin-left: 30.0px;">过程：</p><p></p><ol><br>    <li>可以看到单Cassandra节点下，kairosdb查询Cassandra最短耗时已经在2S左右，而集群模式下，kairosdb查询Cassandra的最短耗时在200ms<br>        左右，可以看出在低硬件配置下，Cassandra部署集群模式比单机模式的性能提升很大。<br>    </li><br>    <li>Cassandra刚部署时，查询性能表现优秀，连续写入一个小时数据后，查询性能下降。</li><br>    <li>2-5组发现kairosdb 查询时间正常， 但指标库查询出现超时，经建飞排查，原因是调用kairosdb client时创建的 http连接 最大数量最2，修改为200后，情况好转。<br><br><br><br>  <img src="/2017/12/10/171210/image2017-12-8_11_24_9.png"><br><br>    </li><br>    <li>从测试过程可以看到，部分指标库的查询耗时比kairosdb查Cassandra的耗时长很多，查询kairosdb.datastore.queries_waiting<br>        指标，发现kairosdb存在大量等待线程。如下：<br><br><br><br><img src="/2017/12/10/171210/kairosdb.datastore.queries_waiting.png"><br><br>          <br>修改<br>        kairosdb 的配置：kairosdb.datastore.concurrentQueryThread ，再次查询，依然会有等待的查询线程。<br>据此判断，当查询15个指标时，每个指标耗时在2.5S左右时，此硬件配置下的kairosdb性能已达瓶颈，影响因素为CPU核数。当更改部署kairosdb<br>        机器的核数后，性能得到了提升。<br>    </li><br>    <li>同样的查询条件下，CPU核数与kairosdb 的concurrentQueryThread 参数一致时，性能最优；且该参数只在kairosdb 查Cassandra较慢（2S以上）时，才会产生影响。</li><br></ol><br><h2 id="id-指标库性能测试-五、结论"><br>五、结论</h2><br><h3 id="id-指标库性能测试-1、指标库写性能：">1、指标库写性能：</h3><br><ol><br>    <li>由3、5、6组可知，每分钟请求总量一定的情况下，在未到达瓶颈前，并发线程越多，指标写入量越大。</li><br>    <li>由6、8组可知，本机的机器性能并未成为影响指标写入的因素。</li><br>    <li>由6、7和8、9两组可知，在4核16G单节点Cassandra 配置下，请求数在50W/min 左右时，指标库的gateway 模块接收请求已到达瓶颈，为 <strong>50W /min</strong> 左右。</li><br>    <li>由9、10、11三组可知，在指标写入能力到达瓶颈后，改变并发的线程数，不再产生影响。</li><br>    <li>由9、12组可知，待写入的指标类型量不是影响因素。</li><br>    <li>由15组可知，当指标库写入请求量每分钟到千万级时，会出现redis 内存问题。</li><br>    <li>单指标库、单Cassandra节点下，指标写入能力瓶颈在Cassandra处，为 <strong>80W/min</strong>；<br>多指标库、单Cassandra节点下，指标写入能力瓶颈在Cassandra处，为<br>        <strong>85W/min</strong>；<br>单指标库、多Cassandra节点下，指标写入能力瓶颈为 <strong>100W/min</strong>；<br>多指标库、多Cassandra节点下，指标写入能力瓶颈为<strong><br>            <strong>110W/min</strong></strong>。<br><br><br></li><br></ol><br><p></p><br><p>配置预估：</p><br><p style="margin-left: 30.0px;">假设现场1个资源每15 S上报100个指标，则每分钟上报400个，若采用单节点Cassandra<br>    配置，在redis集群状况良好的情况下，可支持1750个资源左右，考虑到稳定性可酌情减少资源量或增加配置。</p><br><p style="margin-left: 30.0px;"></p><br><h3 id="id-指标库性能测试-2、指标库读性能：">2、指标库读性能：</h3><br><ol><br>    <li>由1、2组可知R12版本指标库在现有配置下，最多支持每分钟30次的查询。</li><br>    <li>由2、3组可知，查询较慢时，每10S钟查询10次，比每5S钟查询5次，查询要快。</li><br>    <li>由2、4组可知，相同的请求量下，同一个指标密集查询2次，比两个指标同时各查一次要慢很多。</li><br>    <li>由1、5组可知，查询的数据量从600到7200，查询的Cassandra row从 77到740，查询耗时基本没有变化，不过Cassandra的资源消耗增加很多。</li><br>    <li>由2、7组可知，kairosdb client 创建的 http连接 最大数量与查询性能十分相关，R13中已调整该参数为200。</li><br>    <li>由6-8、14、15组可知，单Cassandra节点下，指标查询的瓶颈为 <strong>90次/分钟</strong>，且当 指标库的查询耗时 与<br>        kairosdb查Cassandra的耗时相差不大时，可以维持稳定查询状态，否则指标库查询超时会越来越严重。<br>    </li><br>    <li>由8-13、17-19组可知，kairosdb的concurrentQueryThread 参数值与CPU核数一致时，性能最优；且该参数只在kairosdb 查Cassandra较慢（2S以上）时，才会产生影响。</li><br>    <li>由8、16组可知，指标库是否集群模式不是瓶颈。</li><br>    <li>由19、22和20、23两组可知，单kairosdb 8核的查询性能 与双kairosdb 4核基本相同，所以kairosdb 的查询性能与机器的CPU核数有关。</li><br>    <li>由19、24组可知，当前的查询瓶颈在Cassandra 处，Cassandra 集群的查询性能是单节点的10倍。</li><br>    <li>由24-29组可知，Cassandra集群下，查询性能瓶颈为<strong>1400次/分钟</strong>，当查询到1500次/分钟时，kairosdb出现瓶颈，等待查询线程不断增加。</li><br>    <li>由30、31组可知，当Cassandra写入一段时间数据后，指标查询性能下降很多。</li><br></ol>]]></content>
     
@@ -116,7 +367,7 @@
     
     </summary>
     
-      <category term="数据库" scheme="https://jasonsonghoho.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="未分类" scheme="https://jasonsonghoho.github.io/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"/>
     
     
       <category term="cassandra" scheme="https://jasonsonghoho.github.io/public/tags/cassandra/"/>
@@ -160,7 +411,7 @@
     <link href="https://jasonsonghoho.github.io/2017/10/23/171023/"/>
     <id>https://jasonsonghoho.github.io/2017/10/23/171023/</id>
     <published>2017-10-23T14:08:41.000Z</published>
-    <updated>2018-09-20T15:23:28.344Z</updated>
+    <updated>2018-09-22T02:45:28.893Z</updated>
     
     <content type="html"><![CDATA[<h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><div class="markdown-toc editormd-markdown-toc"><ul class="markdown-toc-list"><li><a class="toc-level-2" href="#login" level="2">login</a></li><li><a class="toc-level-2" href="#status" level="2">status</a></li><li><a class="toc-level-2" href="#ls" level="2">ls</a></li><li><a class="toc-level-2" href="#ps" level="2">ps</a></li><li><a class="toc-level-2" href="#trace" level="2">trace</a></li><li><a class="toc-level-2" href="#invoke" level="2">invoke</a></li><li><a class="toc-level-2" href="#more" level="2">more</a><ul></ul></li></ul></div><blockquote><p>从 2.0.5 版本开始，dubbo 开始支持通过 telnet 命令来镜像服务治理。</p></blockquote><h2 id="login"><a href="#login" class="headerlink" title="login"></a>login</h2><p>telnet localhost 20880(dubbo或服务端口)</p><img src="/2017/10/23/171023/login.png" title="login"><h2 id="status"><a href="#status" class="headerlink" title="status"></a>status</h2><ol><li>status: 显示汇总状态，该状态将汇总所有资源的状态，当全部 OK 时则显示 OK，只要有一个 ERROR 则显示 ERROR，只要有一个 WARN 则显示 WARN</li><li>status -l: 显示状态列表</li></ol><p>见上图</p><h2 id="ls"><a href="#ls" class="headerlink" title="ls"></a>ls</h2><p>显示服务列表、方法列表、参数等</p><ol><li>ls: 显示服务列表</li><li>ls -l: 显示服务详细信息列表</li><li>ls XxxService: 显示服务的方法列表</li><li>ls -l XxxService: 显示服务的方法详细信息列表</li></ol><img src="/2017/10/23/171023/ps&ls.png" title="ls"><h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>显示服务端口列表，可用来查看服务是否已成功注册</p><ol><li>ps: 显示服务端口列表</li><li>ps -l: 显示服务地址列表</li><li>ps 20880: 显示端口上的连接信息</li><li>ps -l 20880: 显示端口上的连接详细信息</li></ol><p>见上图</p><h2 id="trace"><a href="#trace" class="headerlink" title="trace"></a>trace</h2><p>跟踪服务任意方法的调用情况</p><ol><li>trace XxxService: 跟踪 1 次服务任意方法的调用情况</li><li>trace XxxService 10: 跟踪 10 次服务任意方法的调用情况</li><li>trace XxxService xxxMethod: 跟踪 1 次服务方法的调用情况</li><li>trace XxxService xxxMethod 10: 跟踪 10 次服务方法的调用情况</li></ol><img src="/2017/10/23/171023/trace.png" title="trace"><h2 id="invoke"><a href="#invoke" class="headerlink" title="invoke"></a>invoke</h2><p>调用服务的方法，通过该命令可直接调试方法。</p><ol><li>invoke XxxService.xxxMethod({“prop”: “value”}): 调用服务的方法</li><li>invoke xxxMethod({“prop”: “value”}): 调用服务的方法(自动查找包含此方法的服务)</li></ol><img src="/2017/10/23/171023/invoke.png" title="invoke"><h2 id="more"><a href="#more" class="headerlink" title="more"></a>more</h2><p>更多 Dubbo Telnet 命令请参阅：<a href="https://dubbo.gitbooks.io/dubbo-user-book/references/telnet.html" target="_blank" rel="noopener">Telnet 命令参考手册</a> </p>]]></content>
     
@@ -173,7 +424,7 @@
     
     </summary>
     
-      <category term="一些中间件" scheme="https://jasonsonghoho.github.io/categories/%E4%B8%80%E4%BA%9B%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+      <category term="中间件" scheme="https://jasonsonghoho.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
     
       <category term="dubbo" scheme="https://jasonsonghoho.github.io/public/tags/dubbo/"/>
@@ -185,7 +436,7 @@
     <link href="https://jasonsonghoho.github.io/2017/10/22/171022/"/>
     <id>https://jasonsonghoho.github.io/2017/10/22/171022/</id>
     <published>2017-10-22T14:08:41.000Z</published>
-    <updated>2018-09-20T15:23:28.330Z</updated>
+    <updated>2018-09-22T02:45:28.889Z</updated>
     
     <content type="html"><![CDATA[<h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><div class="markdown-toc editormd-markdown-toc"><ul class="markdown-toc-list"><li><a class="toc-level-2" href="#修改Cassandra 最大可用内存大小" level="2">修改Cassandra 最大可用内存大小</a></li><li><a class="toc-level-2" href="#登录CQL" level="2">登录CQL</a></li><li><a class="toc-level-2" href="#查看墓碑数据总量" level="2">查看墓碑数据总量</a></li><li><a class="toc-level-2" href="#修复表" level="2">修复表</a></li><li><a class="toc-level-2" href="#压实数据" level="2">压实数据</a></li><li><a class="toc-level-2" href="#查看当前压实操作状态和历史压实纪录" level="2">查看当前压实操作状态和历史压实纪录</a></li><li><a class="toc-level-2" href="#查看表的状态" level="2">查看表的状态</a></li><li><a class="toc-level-2" href="#Cassandra 线程池的使用统计信息" level="2">Cassandra 线程池的使用统计信息</a></li><li><a class="toc-level-2" href="#其他" level="2">其他</a><ul></ul></li></ul></div><blockquote><p>文中Cassandra 安装在/opt 目录下，具体执行命令需根据自己的Cassandra安装目录进行调整。<br>Cassandra 版本为 3.5。</p></blockquote><h2 id="修改Cassandra-最大可用内存大小"><a href="#修改Cassandra-最大可用内存大小" class="headerlink" title="修改Cassandra 最大可用内存大小"></a>修改Cassandra 最大可用内存大小</h2><p>Cassandra 默认最大可用内存和初始内存大小(-Xmx 、-Xms )为 4G ，通常情况下偏小。</p><p>修改最大内存大小可直接修改 cassandra/conf/cassandra-env.sh 中 MAX_HEAP_SIZE 参数：<code>MAX_HEAP_SIZE=&quot;4G&quot;</code></p><p>cassandra 有两种GC策略，系统内存在14G以上，推荐使用 G1策略。默认使用的是CMS策略。参阅<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/operations/opsTuneJVM.html" target="_blank" rel="noopener">Tuning Java resources </a></p><h2 id="登录CQL、查看版本"><a href="#登录CQL、查看版本" class="headerlink" title="登录CQL、查看版本"></a>登录CQL、查看版本</h2><p>登录：<br><code>/opt/cassandra/bin/cqlsh [ip] -u [username] -p [passwd]</code></p><p>查看版本：<br><code>cqlsh&gt;show version</code></p><img src="/2017/10/22/171022/logIn_showVersion.png" title="登录CQL、查看版本"><h2 id="查看墓碑数据总量"><a href="#查看墓碑数据总量" class="headerlink" title="查看墓碑数据总量"></a>查看墓碑数据总量</h2><p>没有直接查看墓碑数量的好方法，可在CQL 中开启tracing，执行查询时，会提示具体表含有多少墓碑数据：</p><img src="/2017/10/22/171022/count_tombstone.png" title="墓碑数据总量"><h2 id="修复表"><a href="#修复表" class="headerlink" title="修复表"></a>修复表</h2><p>修复表可以手动同步各个节点的数据（包括墓碑数据），需在各个节点分别执行</p><p><code>/opt/cassandra/bin/nodetool  repair kairosdb string_index;</code></p><h2 id="压实数据"><a href="#压实数据" class="headerlink" title="压实数据"></a>压实数据</h2><p>墓碑数据过多会影响Cassandra性能。压实数据，可消除墓碑数据。压实前，需进行表数据的修复，以防删除数据恢复。</p><ol><li>手动压实：</li></ol><p><code>/opt/cassandra/bin/nodetool  compact  kairosdb string_index</code></p><ol start="2"><li><p>开启自动压实(默认已开启)：<code>/opt/cassandra/bin/nodetool enableautocompaction</code></p></li><li><p>修改表的压实策略：</p></li></ol><p><code>ALTER TABLE kairosdb.string_index   WITH compaction =   {&#39;class&#39; : &#39;SizeTieredCompactionStrategy&#39;, &#39;min_threshold&#39; : 6 };</code></p><ol start="4"><li>修改自动压实周期：</li></ol><p>默认压实时间为864000，即10天，修改为一天：<code>alter table kairosdb.string_index with GC_GRACE_SECONDS = 86400;</code></p><p>关于压实策略，请参阅：<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlHowDataMaintain.html" target="_blank" rel="noopener">How is data maintained</a></p><h2 id="查看当前压实操作状态和历史压实纪录"><a href="#查看当前压实操作状态和历史压实纪录" class="headerlink" title="查看当前压实操作状态和历史压实纪录"></a>查看当前压实操作状态和历史压实纪录</h2><p><code>/opt/cassandra/bin/nodetool  compactionstats;/opt/cassandra/bin/nodetool  compactionhistory;</code></p><img src="/2017/10/22/171022/compaction.png" title="compaction"><h2 id="查看表的状态"><a href="#查看表的状态" class="headerlink" title="查看表的状态"></a>查看表的状态</h2><p><code>/opt/cassandra/bin/nodetool  cfstats kairosdb.data_points  或/opt/cassandra/bin/nodetool  tablestats kairosdb.data_points;</code></p><img src="/2017/10/22/171022/cfstats.png" title="cfstats"><h2 id="Cassandra-线程池的使用统计信息"><a href="#Cassandra-线程池的使用统计信息" class="headerlink" title="Cassandra 线程池的使用统计信息"></a>Cassandra 线程池的使用统计信息</h2><p>Cassandra基于分阶段事件驱动架构（SEDA）。Cassandra将不同的任务分成由消息服务连接的很多阶段。每个阶段都有一个队列和一个线程池。如果下一个阶段太忙，Cassandra会备份队列，并将导致性能瓶颈。</p><p><code>/opt/cassandra/bin/nodetool tpstats;</code></p><img src="/2017/10/22/171022/tpstats.png" title="tpstats"><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>更多 cassandra命令请参阅：<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/tools/toolsNodetool.html" target="_blank" rel="noopener">The nodetool utility</a> 、<a href="https://docs.datastax.com/en/cassandra/3.0/index.html" target="_blank" rel="noopener">Apache Cassandra</a></p>]]></content>
     
@@ -198,7 +449,7 @@
     
     </summary>
     
-      <category term="一些中间件" scheme="https://jasonsonghoho.github.io/categories/%E4%B8%80%E4%BA%9B%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+      <category term="数据库" scheme="https://jasonsonghoho.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
     
       <category term="cassandra" scheme="https://jasonsonghoho.github.io/public/tags/cassandra/"/>
