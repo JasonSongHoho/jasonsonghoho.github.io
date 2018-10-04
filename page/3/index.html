@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="公众号文章,React," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -81,18 +81,16 @@
 
 
 
-<meta name="description" content="见链接：https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ">
-<meta name="keywords" content="公众号文章,React">
-<meta property="og:type" content="article">
-<meta property="og:title" content="React快速入门">
-<meta property="og:url" content="https://jasonsonghoho.github.io/2018/06/24/React快速入门/index.html">
+<meta name="description" content="创造美好！">
+<meta property="og:type" content="website">
+<meta property="og:title" content="jason&#39;s blog">
+<meta property="og:url" content="https://jasonsonghoho.github.io/page/3/index.html">
 <meta property="og:site_name" content="jason&#39;s blog">
-<meta property="og:description" content="见链接：https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ">
+<meta property="og:description" content="创造美好！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-22T02:52:12.539Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React快速入门">
-<meta name="twitter:description" content="见链接：https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ">
+<meta name="twitter:title" content="jason&#39;s blog">
+<meta name="twitter:description" content="创造美好！">
 
 
 
@@ -122,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://jasonsonghoho.github.io/2018/06/24/React快速入门/"/>
+  <link rel="canonical" href="https://jasonsonghoho.github.io/page/3/"/>
 
 
 
 
 
-  <title>React快速入门 | jason's blog</title>
+  <title>jason's blog</title>
   
 
 
@@ -157,7 +155,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -260,9 +259,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -275,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2018/06/24/React快速入门/">
+    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2017/06/06/2017-06-06-doc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jason song">
@@ -292,7 +291,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">React快速入门</h1>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/06/2017-06-06-doc/" itemprop="url">Spark端口整理</a></h1>
         
 
         <div class="post-meta">
@@ -304,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T10:34:27+08:00">
-                2018-06-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-06T22:08:41+08:00">
+                2017-06-06
               </time>
             
 
@@ -327,8 +328,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
                   </a>
                 </span>
 
@@ -364,8 +365,154 @@
       
 
       
-        <p>见链接：<a href="https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/fDXQe_QCBN4q6zfzKQr1jQ</a></p>
+        
+          
+            <blockquote>
+<p>Configuring Ports for Network Security<br>Spark makes heavy use of the network, and some environments have strict requirements for using tight firewall settings. Below are the primary ports that Spark uses for its communication and how to configure those ports.</p>
+</blockquote>
+<h2 id="Standalone-mode-only"><a href="#Standalone-mode-only" class="headerlink" title="Standalone mode only"></a>Standalone mode only</h2><table>
+<thead>
+<tr>
+<th>From    To</th>
+<th style="text-align:center">Default Port</th>
+<th style="text-align:center">Purpose</th>
+<th style="text-align:center">Configuration</th>
+<th style="text-align:center">Setting</th>
+<th style="text-align:center">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser</td>
+<td style="text-align:center">Standalone Master</td>
+<td style="text-align:center">8080</td>
+<td style="text-align:center">Web UI</td>
+<td style="text-align:center">spark.master.ui.port  SPARK_MASTER_WEBUI_PORT</td>
+<td style="text-align:center">Jetty-based. Standalone mode only.</td>
+</tr>
+<tr>
+<td>Browser</td>
+<td style="text-align:center">Standalone Worker</td>
+<td style="text-align:center">8081</td>
+<td style="text-align:center">Web UI</td>
+<td style="text-align:center">spark.worker.ui.port SPARK_WORKER_WEBUI_PORT</td>
+<td style="text-align:center">Jetty-based. Standalone mode only.</td>
+</tr>
+<tr>
+<td>Driver、 Standalone Worker</td>
+<td style="text-align:center">Standalone Master</td>
+<td style="text-align:center">7077</td>
+<td style="text-align:center">Submit job to cluster Join cluster</td>
+<td style="text-align:center">SPARK_MASTER_PORT</td>
+<td style="text-align:center">Set to “0” to choose a port randomly. Standalone mode only. spark service 端口</td>
+</tr>
+<tr>
+<td>Standalone Master</td>
+<td style="text-align:center">Standalone Worker</td>
+<td style="text-align:center">(random)</td>
+<td style="text-align:center">Schedule executors</td>
+<td style="text-align:center">SPARK_WORKER_PORT</td>
+<td style="text-align:center">Set to “0” to choose a port randomly. Standalone mode only.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="All-cluster-managers"><a href="#All-cluster-managers" class="headerlink" title="All cluster managers"></a>All cluster managers</h2><table>
+<thead>
+<tr>
+<th>From    To</th>
+<th style="text-align:center">Default Port</th>
+<th style="text-align:center">Purpose</th>
+<th style="text-align:center">Configuration</th>
+<th style="text-align:center">Setting</th>
+<th style="text-align:center">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser</td>
+<td style="text-align:center">History Server</td>
+<td style="text-align:center">4040</td>
+<td style="text-align:center">Web UI</td>
+<td style="text-align:center">spark.master.ui.port</td>
+<td style="text-align:center">Jetty-based. 一个worker上可以有多个Job,因此该端口号会随着job的增加而递增。</td>
+</tr>
+<tr>
+<td>Browser</td>
+<td style="text-align:center">History Server</td>
+<td style="text-align:center">8081</td>
+<td style="text-align:center">Web UI</td>
+<td style="text-align:center">spark.history.ui.port</td>
+<td style="text-align:center">Jetty-based.</td>
+</tr>
+<tr>
+<td>Executor /  Standalone Master</td>
+<td style="text-align:center">Driver</td>
+<td style="text-align:center">(random)</td>
+<td style="text-align:center">Connect to application /Notify executor state changes</td>
+<td style="text-align:center">spark.driver.port</td>
+<td style="text-align:center">Set to “0” to choose a port randomly.</td>
+</tr>
+<tr>
+<td>Standalone Master</td>
+<td style="text-align:center">Executor / Driver</td>
+<td style="text-align:center">(random)</td>
+<td style="text-align:center">Block Manager port</td>
+<td style="text-align:center">spark.blockManager.port</td>
+<td style="text-align:center">Raw socket via ServerSocketChannel</td>
+</tr>
+</tbody>
+</table>
+<p>注：History Server 是需要配置才可以访问的。配置好后访问该服务，能重新渲染生成UI界面展现出该Application在执行过程中的运行时信息。<br>       启用该服务方法可参考 Spark History Server配置使用 和 spark 查看 job history 日志 。</p>
+<h2 id="Spark-UI"><a href="#Spark-UI" class="headerlink" title="Spark UI"></a>Spark UI</h2><table>
+<thead>
+<tr>
+<th>From    To</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.blockManager.port</td>
+<td style="text-align:center">(random)</td>
+<td style="text-align:center">Port for all block managers to listen on. These exist on both the driver and the executors.</td>
+</tr>
+<tr>
+<td>spark.driver.blockManager.port</td>
+<td style="text-align:center">(value of spark.blockManager.port)</td>
+<td style="text-align:center">spark.driver.blockManager.port    (value of spark.blockManager.port)    Driver-specific port for the block manager to listen on, for cases where it cannot use the same configuration as executors.</td>
+</tr>
+<tr>
+<td>spark.driver.port</td>
+<td style="text-align:center">(random)</td>
+<td style="text-align:center">spark.driver.port    (random)    Port for the driver to listen on. This is used for communicating with the executors and the standalone Master.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Shuffle-Behavior"><a href="#Shuffle-Behavior" class="headerlink" title="Shuffle Behavior"></a>Shuffle Behavior</h2><table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.shuffle.service.port</td>
+<td style="text-align:center">7337</td>
+<td style="text-align:center">Port on which the external shuffle service will run.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Spark隐藏端口"><a href="#Spark隐藏端口" class="headerlink" title="Spark隐藏端口"></a>Spark隐藏端口</h2><p>6066 相关隐藏端口<br>可参考: <a href="http://arturmkrtchyan.com/apache-spark-hidden-rest-api" target="_blank" rel="noopener">apache-spark-hidden-rest-api</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p><a href="https://spark.apache.org/docs/latest/security.html#configuring" target="_blank" rel="noopener">spark doc</a></p>
+<p><a href="https://spark.apache.org/docs/latest/configuration.html" target="_blank" rel="noopener">spark doc2</a></p>
+</blockquote>
 
+          
+        
       
     </div>
     
@@ -380,42 +527,14 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/public/tags/公众号文章/" rel="tag"># 公众号文章</a>
-          
-            <a href="/public/tags/React/" rel="tag"># React</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/06/05/动物园管理员——ZooKeeper/" rel="next" title="动物园管理员——ZooKeeper">
-                <i class="fa fa-chevron-left"></i> 动物园管理员——ZooKeeper
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/18/Java-7-HashMap-源码解读/" rel="prev" title="Java 7 HashMap 源码解读">
-                Java 7 HashMap 源码解读 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -425,11 +544,14 @@
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
 
 
           </div>
@@ -437,14 +559,6 @@
 
 
           
-
-  
-     <div id="gitalk-container"></div>
-  
-
-
-
-
 
 
 
@@ -686,10 +800,6 @@
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
@@ -730,23 +840,6 @@
 
 
 
-
-  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-
-  <script src="/js/src/md5.min.js"></script>
-   <script type="text/javascript">
-        var gitalk = new Gitalk({
-          clientID: '16a173f15eb20b092e69',
-          clientSecret: '17ca6772928121ecd577d36db6af74571116e17c',
-          repo: 'jasonsonghoho.github.io',
-          owner: 'JasonSongHoho',
-          admin: ['JasonSongHoho'],
-          id: md5(location.pathname),
-          distractionFreeMode: 'true'
-        })
-        gitalk.render('gitalk-container')
-       </script>
 
 
 
