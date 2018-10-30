@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://jasonsonghoho.github.io/2018/10/08/BitMap、BitSet与Bloom%20Filter/bitset-mem.png">
 <meta property="og:image" content="https://jasonsonghoho.github.io/2018/10/08/BitMap、BitSet与Bloom%20Filter/bloom_filter.jpeg">
 <meta property="og:image" content="https://jasonsonghoho.github.io/2018/10/08/BitMap、BitSet与Bloom%20Filter/IMG_1753.GIF">
-<meta property="og:updated_time" content="2018-10-11T17:00:53.169Z">
+<meta property="og:updated_time" content="2018-10-30T09:03:13.706Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BitMap、BitSet与Bloom Filter">
 <meta name="twitter:description" content="推荐阅读时间：5分钟 引言先来看一个问题，假设现在有范围为 1-10 亿的 11 亿个 int 型整数，如何排除掉其中的重复数字？int 占 4 个字节，可以表示 -2,147,483,648 ~ +2,147,483,647 的数据。所以一般的思路是会将这 11 亿个数作为 int 型数据存到一个 HashSet 集合中进行去重。但是，这样会存在一个问题。我们知道 1GB=1024KB=1024">
@@ -372,7 +372,7 @@
 <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>先来看一个问题，假设现在有范围为 1-10 亿的 11 亿个 int 型整数，如何排除掉其中的重复数字？int 占 4 个字节，可以表示 -2,147,483,648 ~ +2,147,483,647 的数据。<br>所以一般的思路是会将这 11 亿个数作为 int 型数据存到一个 HashSet 集合中进行去重。但是，这样会存在一个问题。我们知道 1GB=1024KB=1024 <em> 1024Byte,那么 10亿 </em> 4Byte 将占用接近 4GB 的内存，这将是极大的性能浪费，很可能会影响程序的健康运行。</p>
 <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>我们可以考虑用”位映射（BitMap）”来解决这个问题。试想一下，如果我们有一个位数组（bit[n]），那么我们可以用 bit[i] 来表示 0-n 中对应的数字，每个元素有 1 和 0 两个取值，分别代表该数字存在与否。这样一来，我们记录一个数字只需要一个 bit，相对于之前的 int 类型(32 bit)，整整缩小了 32 倍的存储大小(4GB/32=125MB)!</p>
 <p>扩展一下，当我们需要记录每个数字出现次数是否超过 2 次时，可以使用连续的两位来记录一个数字：一位用来记录是否出现，另一位用来记录是否超过 2 次。</p>
-<p>不过，Java 中无法创建 bit 数组，我们可以使用 int 或 long 数组来实现这个目的。建立一个 int 数组 int[n]，int[0] 记录了 0-7，int[1] 记录了 8-15 …… 依此类推。</p>
+<p>不过，Java 中无法创建 bit 数组，我们可以使用 int 或 long 数组来实现这个目的。建立一个 int 数组 int[n]，int[0] 记录了 0-31，int[1] 记录了 32-63 …… 依此类推。</p>
 <h3 id="Java-BitSet"><a href="#Java-BitSet" class="headerlink" title="Java BitSet"></a>Java BitSet</h3><p>Java 中有一个 BitSet 类，从命名就可以看出它是用来存储去重的位元素集合，它还支持 and、or 等位运算。用来解决文章开头的问题非常合适，方式如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BitSetStudy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        BitSet bitSet = <span class="keyword">new</span> BitSet(<span class="number">1000000000</span>);</span><br><span class="line">        <span class="comment">//随机生成 11 亿个数字</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1100000000</span>; i++) &#123;</span><br><span class="line">            bitSet.set((<span class="keyword">int</span>) (Math.random() * <span class="number">1000000000</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(bitSet.size());</span><br><span class="line">        System.out.println(<span class="string">"end"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>打开 jconsole,可以看到存储了 bitset 对象的老年代所占用的内存稳定在 125MB 左右。</p>
@@ -426,8 +426,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/24/Java-8-HashMap（下）—— compute/" rel="next" title="Java 8 HashMap(下)—— compute">
-                <i class="fa fa-chevron-left"></i> Java 8 HashMap(下)—— compute
+              <a href="/2018/09/24/Java-8-HashMap-上-——-红黑树/" rel="next" title="Java 8 HashMap(上)—— 红黑树">
+                <i class="fa fa-chevron-left"></i> Java 8 HashMap(上)—— 红黑树
               </a>
             
           </div>
