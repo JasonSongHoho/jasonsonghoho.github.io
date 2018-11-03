@@ -88,6 +88,7 @@ deploy:
 
 plugins: hexo-generate-feed
 
-links_title: links
+links_title: 链接
 links:
   阿里中间件BLOG: http://jm.taobao.org/
+  Flink China: https://flink-china.org/index.html
