@@ -274,6 +274,169 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2018/05/21/180521/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jason song">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jason's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/21/180521/" itemprop="url">我们为提升 Cassandra 读性能做了哪些努力？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-21T22:08:41+08:00">
+                2018-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><ul>
+<li>关于Cassandra</li>
+<li>提升读性能</li>
+</ul>
+<h2 id="关于Cassandra"><a href="#关于Cassandra" class="headerlink" title="关于Cassandra"></a>关于Cassandra</h2><p>Apache Cassandra是一个高度可扩展的高性能分布式数据库，<br>用于处理大量常规服务器上的大量数据，提供高可用性，无单点故障。它是一种NoSQL类型的数据库。</p>
+<p>我们看一下国外权威机构<a href="https://db-engines.com/en/ranking" target="_blank" rel="noopener">DB-Engines</a>最近的数据库全球流行程度排名：</p>
+<img src="/2018/05/21/180521/database_rank.png" title="数据库排名">
+<p>可以看出，Cassandra 是排名前十中四个仅有的NoSQL数据库之一。Cassandra在国外这样受欢迎，其性能可想而知不会差，<br>但是在国内貌似还没有多少公司使用，且国内关于 Cassandra方面的资料较少。</p>
+<h2 id="提升读性能"><a href="#提升读性能" class="headerlink" title="提升读性能"></a>提升读性能</h2><p>Cassandra 在我们的项目中用来存储时序数据，经过测试，在三台4核16G的虚拟机上，<br>指标数据的写入TPS可以达到6.5W/s，基本可以满足我们的业务需求。<br>但是读取性能可能就会差很多，因为数据查询速度跟每次查询的数据量关系比较大，此处也不好定义TPS。<br>产品查询一周以上的指标数据时，经常会出现加载缓慢，甚至查询超时。为了改善查询状况，我们进行了不少努力。</p>
+<p>此处不讨论纵向扩展和横向扩展带来的性能提升。</p>
+<h3 id="1-加快墓碑回收甚至去除墓碑"><a href="#1-加快墓碑回收甚至去除墓碑" class="headerlink" title="1. 加快墓碑回收甚至去除墓碑"></a>1. 加快墓碑回收甚至去除墓碑</h3><p>在Cassandra中，当你删除一条数据时，其实是给这条数据进行update，给它update上一个标识，就是一个墓碑标识。<br> 当Cassandra集群在不同节点之间同步删除信息的时候，也会用到Tombstones(墓碑)，可以说墓碑是一种允许Cassandra快速写入的机制。</p>
+<p>关于墓碑的更多消息，可参考 <a href="https://docs.datastax.com/en/Cassandra/3.0/Cassandra/dml/dmlHowDataMaintain.html" target="_blank" rel="noopener">Cassandra 数据维护官方文档</a></p>
+<p>可以这样理解，大量的墓碑数据会使查询时搜索的数据量变大，直接影响查询时的效率。<br>所以，为了消除这种影响，我们可以加快墓碑数据的回收，避免产生大量的墓碑数据。<br>甚至，当我们在写入时，若写入一致性的值与副本因子数量相等时，可以不产生墓碑数据，直接删掉该无效数据。<br>具体可通过 调整 table 中 gc_grace_seconds 参数来实现，默认为 864000（10天），我们可以设为 86400（1天）或者0（直接删除）。</p>
+<h3 id="2-降低read-repair-的几率"><a href="#2-降低read-repair-的几率" class="headerlink" title="2. 降低read repair 的几率"></a>2. 降低read repair 的几率</h3><p>每一次读操作，Cassandra都会在后台进行read repair操作。<br>如果只要求读一个节点数据，Cassandra在读到一个节点后，就将结果返回客户端，<br>然后用read repair对其他的replicas进行同步（根据timestamp）。<br>如果要求读多个节点，那么Cassandra就读多个节点，然后根据timestamp进行比较，返回客户端最新的数据，<br>然后再调用read repair对其他节点进行同步。<br>Read repair在后台的操作，会占用一定的CPU和I/O,所以影响读性能。<br>我们可以降低read repair 的几率，以提高读取性能。</p>
+<p>通过修改 table 中 read_repair_chance（取值范围 0-1）参数来设置read repair 的几率，建议设为 0.1。</p>
+<h3 id="3-指标数据预聚合"><a href="#3-指标数据预聚合" class="headerlink" title="3. 指标数据预聚合"></a>3. 指标数据预聚合</h3><p>思路：我们存在数据库中的指标数据，读取时会将指定时间范围内的数据进行聚合。<br>如果提前将数据按基本时间段提前聚合为一个值，读取时，只读取时间范围内的时间段的汇聚结果，将大大减少查询耗时。</p>
+<h3 id="4-合理部署产品"><a href="#4-合理部署产品" class="headerlink" title="4. 合理部署产品"></a>4. 合理部署产品</h3><p>公司的其他产品使用了mongoDB，线上环境中发现，这两个NoSQL数据库部署在一起时会相互争夺内存资源，<br>十分影响性能，因此最好将这两个数据库分开部署。</p>
+<h3 id="5-设置合理的堆内存大小和GC策略"><a href="#5-设置合理的堆内存大小和GC策略" class="headerlink" title="5. 设置合理的堆内存大小和GC策略"></a>5. 设置合理的堆内存大小和GC策略</h3><p>堆内存设置的太小，将导致频繁GC甚至OOM，设置的太大同样也不好。可参考官方的公式:<br><code>MAX_HEAP_SIZE=max(min(1/2 ram, 1024MB), min(1/4 ram, 8GB)</code></p>
+<p>关于GC策略，官方的建议是：小于16G，用CMS收集器；16-64G，用G1收集器。</p>
+<h3 id="6-设置合理的压式策略"><a href="#6-设置合理的压式策略" class="headerlink" title="6. 设置合理的压式策略"></a>6. 设置合理的压式策略</h3><p>Cassandra 将落到磁盘的数据存放在SStable中，压实是将多个SSTable 文件合并为一个的过程。合并后将减少重复的数据，使数据更紧凑。<br>Cassandra 有多种触发压实的策略，选一个适合的压实策略，可以更好地压实数据。<br>比如，我们使用的Kairosdb建议采用 DateTieredCompactionStrategy (<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlHowDataMaintain.html#dmlHowDataMaintain__dtcs-compaction" target="_blank" rel="noopener">DTCS</a>))压实策略。</p>
+<h3 id="7-启用-row-cache"><a href="#7-启用-row-cache" class="headerlink" title="7. 启用 row cache"></a>7. 启用 row cache</h3><p>row cache 把整个row 的内容都放在内存中。<br>适合的情况是，有一小部分hot data是经常反问的，或者要返回整个columns.在使用row cache时，用注意它对内存的影响。<br>可参考 Cassandra 的<a href="https://docs.datastax.com/en/cassandra/3.0/cassandra/operations/opsConfiguringCaches.html" target="_blank" rel="noopener">官方文档</a>设置row cache。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>安利一个入门Cassandra 的好博客：<a href="http://teddymaef.github.io/learnCassandra/cn/" target="_blank" rel="noopener">learn Cassandra</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2018/05/20/Linux中的top命令详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1652,190 +1815,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2017/10/23/171023/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="jason song">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="jason's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/23/171023/" itemprop="url">Dubbo Telnet 命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-23T22:08:41+08:00">
-                2017-10-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/中间件/" itemprop="url" rel="index">
-                    <span itemprop="name">中间件</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="目录-Table-of-Contents"><a href="#目录-Table-of-Contents" class="headerlink" title=" 目录 (Table of Contents)"></a> <strong>目录 (Table of Contents)</strong></h2><div class="markdown-toc editormd-markdown-toc"><ul class="markdown-toc-list"><li><a class="toc-level-2" href="#login" level="2">login</a></li><li><a class="toc-level-2" href="#status" level="2">status</a></li><li><a class="toc-level-2" href="#ls" level="2">ls</a></li><li><a class="toc-level-2" href="#ps" level="2">ps</a></li><li><a class="toc-level-2" href="#trace" level="2">trace</a></li><li><a class="toc-level-2" href="#invoke" level="2">invoke</a></li><li><a class="toc-level-2" href="#more" level="2">more</a><ul></ul></li></ul></div>
-
-<blockquote>
-<p>从 2.0.5 版本开始，dubbo 开始支持通过 telnet 命令来镜像服务治理。</p>
-</blockquote>
-<h2 id="login"><a href="#login" class="headerlink" title="login"></a>login</h2><p>telnet localhost 20880(dubbo或服务端口)</p>
-<img src="/2017/10/23/171023/login.png" title="login">
-<h2 id="status"><a href="#status" class="headerlink" title="status"></a>status</h2><ol>
-<li>status: 显示汇总状态，该状态将汇总所有资源的状态，当全部 OK 时则显示 OK，只要有一个 ERROR 则显示 ERROR，只要有一个 WARN 则显示 WARN</li>
-<li>status -l: 显示状态列表</li>
-</ol>
-<p>见上图</p>
-<h2 id="ls"><a href="#ls" class="headerlink" title="ls"></a>ls</h2><p>显示服务列表、方法列表、参数等</p>
-<ol>
-<li>ls: 显示服务列表</li>
-<li>ls -l: 显示服务详细信息列表</li>
-<li>ls XxxService: 显示服务的方法列表</li>
-<li>ls -l XxxService: 显示服务的方法详细信息列表</li>
-</ol>
-<img src="/2017/10/23/171023/ps&ls.png" title="ls">
-<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>显示服务端口列表，可用来查看服务是否已成功注册</p>
-<ol>
-<li>ps: 显示服务端口列表</li>
-<li>ps -l: 显示服务地址列表</li>
-<li>ps 20880: 显示端口上的连接信息</li>
-<li>ps -l 20880: 显示端口上的连接详细信息</li>
-</ol>
-<p>见上图</p>
-<h2 id="trace"><a href="#trace" class="headerlink" title="trace"></a>trace</h2><p>跟踪服务任意方法的调用情况</p>
-<ol>
-<li>trace XxxService: 跟踪 1 次服务任意方法的调用情况</li>
-<li>trace XxxService 10: 跟踪 10 次服务任意方法的调用情况</li>
-<li>trace XxxService xxxMethod: 跟踪 1 次服务方法的调用情况</li>
-<li>trace XxxService xxxMethod 10: 跟踪 10 次服务方法的调用情况</li>
-</ol>
-<img src="/2017/10/23/171023/trace.png" title="trace">
-<h2 id="invoke"><a href="#invoke" class="headerlink" title="invoke"></a>invoke</h2><p>调用服务的方法，通过该命令可直接调试方法。</p>
-<ol>
-<li>invoke XxxService.xxxMethod({“prop”: “value”}): 调用服务的方法</li>
-<li>invoke xxxMethod({“prop”: “value”}): 调用服务的方法(自动查找包含此方法的服务)</li>
-</ol>
-<img src="/2017/10/23/171023/invoke.png" title="invoke">
-<h2 id="more"><a href="#more" class="headerlink" title="more"></a>more</h2><p>更多 Dubbo Telnet 命令请参阅：<a href="https://dubbo.gitbooks.io/dubbo-user-book/references/telnet.html" target="_blank" rel="noopener">Telnet 命令参考手册</a> </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1892,7 +1871,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1914,7 +1893,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1976,7 +1955,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
