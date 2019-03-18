@@ -428,13 +428,14 @@
 <td></td>
 </tr>
 <tr>
+<td>timeWindow</td>
+<td>降级的时间，单位为 s</td>
+<td></td>
+</tr>
+<tr>
 <td>grade</td>
 <td>降级模式，根据 RT 降级还是根据异常比例降级</td>
 <td>RT</td>
-</tr>
-<tr>
-<td>timeWindow</td>
-<td>降级的时间，单位为 s</td>
 </tr>
 </tbody>
 </table>
@@ -521,11 +522,6 @@
 <td></td>
 </tr>
 <tr>
-<td>grade</td>
-<td>限流模式</td>
-<td>QPS 模式</td>
-</tr>
-<tr>
 <td>paramIdx</td>
 <td>热点参数的索引，必填，对应 SphU.entry(xxx, args) 中的参数索引位置</td>
 <td></td>
@@ -533,6 +529,12 @@
 <tr>
 <td>paramFlowItemList</td>
 <td>参数例外项，可以针对指定的参数值单独设置限流阈值，不受前面 count 阈值的限制。仅支持基本类型</td>
+<td></td>
+</tr>
+<tr>
+<td>grade</td>
+<td>限流模式</td>
+<td>QPS 模式</td>
 </tr>
 </tbody>
 </table>
