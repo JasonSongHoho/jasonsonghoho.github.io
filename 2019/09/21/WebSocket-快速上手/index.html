@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="WebSocket," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="jason's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="简介本文介绍如何基于 SpringBoot 快速搭建 WebSocket 服务端和客户端。 WebSocket 使用场景与 Http 协议相比，WebSocket 有两大优势：  支持服务端主动向客户端推送消息，不需要客户端进行轮询服务端。 节省网络带宽。维持一个长连接，客户端和服务端通信不需要频繁的建立连接。且互相沟通的Header非常小。  Quick Start开始搞起 maven 依赖12">
+<meta name="keywords" content="WebSocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebSocket 快速上手">
+<meta property="og:url" content="https://jasonsonghoho.github.io/2019/09/21/WebSocket-快速上手/index.html">
+<meta property="og:site_name" content="jason&#39;s blog">
+<meta property="og:description" content="简介本文介绍如何基于 SpringBoot 快速搭建 WebSocket 服务端和客户端。 WebSocket 使用场景与 Http 协议相比，WebSocket 有两大优势：  支持服务端主动向客户端推送消息，不需要客户端进行轮询服务端。 节省网络带宽。维持一个长连接，客户端和服务端通信不需要频繁的建立连接。且互相沟通的Header非常小。  Quick Start开始搞起 maven 依赖12">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-21T12:29:24.015Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebSocket 快速上手">
+<meta name="twitter:description" content="简介本文介绍如何基于 SpringBoot 快速搭建 WebSocket 服务端和客户端。 WebSocket 使用场景与 Http 协议相比，WebSocket 有两大优势：  支持服务端主动向客户端推送消息，不需要客户端进行轮询服务端。 节省网络带宽。维持一个长连接，客户端和服务端通信不需要频繁的建立连接。且互相沟通的Header非常小。  Quick Start开始搞起 maven 依赖12">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jasonsonghoho.github.io/2019/09/21/WebSocket-快速上手/"/>
+
+
+
+
+
+  <title>WebSocket 快速上手 | jason's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?72b386cef7d7f109725797247e159526";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jason's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2019/09/21/WebSocket-快速上手/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jason song">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jason's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">WebSocket 快速上手</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-21T18:58:29+08:00">
+                2019-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文介绍如何基于 SpringBoot 快速搭建 WebSocket 服务端和客户端。</p>
+<h3 id="WebSocket-使用场景"><a href="#WebSocket-使用场景" class="headerlink" title="WebSocket 使用场景"></a>WebSocket 使用场景</h3><p>与 Http 协议相比，WebSocket 有两大优势：</p>
+<ol>
+<li>支持服务端主动向客户端推送消息，不需要客户端进行轮询服务端。</li>
+<li>节省网络带宽。维持一个长连接，客户端和服务端通信不需要频繁的建立连接。且互相沟通的Header非常小。</li>
+</ol>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><p>开始搞起</p>
+<h3 id="maven-依赖"><a href="#maven-依赖" class="headerlink" title="maven 依赖"></a>maven 依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--服务端依赖--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-websocket&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.6.RELEASE&lt;/version&gt; &lt;!--版本自选--&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--客户端依赖--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.java-websocket&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;Java-WebSocket&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.4.0&lt;/version&gt; &lt;!--版本自选--&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="服务端代码"><a href="#服务端代码" class="headerlink" title="服务端代码"></a>服务端代码</h3><p>新建一个 SpringBoot 应用。添加 MyWebSocket 类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import javax.websocket.*;</span><br><span class="line">import javax.websocket.server.PathParam;</span><br><span class="line">import javax.websocket.server.ServerEndpoint;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.concurrent.ConcurrentHashMap;</span><br><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">@Component</span><br><span class="line">@ServerEndpoint(&quot;/myWebSocket/&#123;id&#125;&quot;)</span><br><span class="line">public class MyWebSocket &#123;</span><br><span class="line"></span><br><span class="line">    public static String heartBeat = &quot;HeartBeat&quot;;</span><br><span class="line">    public static ConcurrentHashMap&lt;Long, MyWebSocket&gt; webSocketMap = new ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 与某个客户端的连接会话，需要通过它来与客户端进行数据收发</span><br><span class="line">     */</span><br><span class="line">    private Session session;</span><br><span class="line">    private Long id;</span><br><span class="line"></span><br><span class="line">    public static int getOnlineCount() &#123;</span><br><span class="line">        return webSocketMap.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @OnOpen</span><br><span class="line">    public void onOpen(Session session, @PathParam(&quot;id&quot;) Long id) &#123;</span><br><span class="line">        log.info(&quot;Open a webSocket. id=&#123;&#125;&quot;, id);</span><br><span class="line">        this.session = session;</span><br><span class="line">        this.id = id;</span><br><span class="line">        webSocketMap.put(id, this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @OnClose</span><br><span class="line">    public void onClose() &#123;</span><br><span class="line">        webSocketMap.remove(id);</span><br><span class="line">        log.info(&quot;Close a webSocket. id:&#123;&#125;&quot;, id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @OnMessage</span><br><span class="line">    public void onMessage(String message, Session session) &#123;</span><br><span class="line">        if (heartBeat.equals(message)) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                session.getBasicRemote().sendText(message);</span><br><span class="line">                log.debug(&quot;Receive a heartBeat message from client: &#123;&#125;. id:&#123;&#125;&quot;, message, id);</span><br><span class="line">                return;</span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                log.error(&quot;回复心跳信息失败！&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(&quot;Receive a message from client: &#123;&#125;. id:&#123;&#125;&quot;, message, id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @OnError</span><br><span class="line">    public void onError(Session session, Throwable error) &#123;</span><br><span class="line">        log.error(&quot;Error while webSocket. &quot;, error);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public Session getSession() &#123;</span><br><span class="line">        return session;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Long getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="客户端代码"><a href="#客户端代码" class="headerlink" title="客户端代码"></a>客户端代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.java_websocket.client.WebSocketClient;</span><br><span class="line">import org.java_websocket.drafts.Draft;</span><br><span class="line">import org.java_websocket.drafts.Draft_6455;</span><br><span class="line">import org.java_websocket.handshake.ServerHandshake;</span><br><span class="line"></span><br><span class="line">import java.net.URI;</span><br><span class="line">import java.net.URISyntaxException;</span><br><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">public class TestWebSocketClient extends WebSocketClient &#123;</span><br><span class="line">    public static String heartBeat = &quot;HeartBeat&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public TestWebSocketClient(URI serverUri, Draft protocolDraft) &#123;</span><br><span class="line">        super(serverUri, protocolDraft);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws URISyntaxException, InterruptedException &#123;</span><br><span class="line">        //端口号与 SpringBoot 的 servlet 容器端口一致</span><br><span class="line">        String serverUrl = &quot;ws://localhost:9292/myWebSocket/2000000000462815&quot;;</span><br><span class="line">        URI recognizeUri = new URI(serverUrl);</span><br><span class="line">        TestWebSocketClient client = new TestWebSocketClient(recognizeUri, new Draft_6455());</span><br><span class="line">        client.connectBlocking(5, TimeUnit.SECONDS);</span><br><span class="line">        client.send(&quot;This is a message from client. &quot;);</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            client.send(heartBeat);</span><br><span class="line">            Thread.sleep(2000);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onOpen(ServerHandshake serverHandshake) &#123;</span><br><span class="line">        log.info(&quot;Open a WebSocket connection on client. &quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onClose(int code, String reason, boolean remote) &#123;</span><br><span class="line">        log.info(&quot;Close a WebSocket connection on client.  &#123;&#125; &#123;&#125; &#123;&#125;&quot;, code, reason, remote);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(String message) &#123;</span><br><span class="line">        log.info(&quot;WebSocketClient receives a message: &quot; + message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onError(Exception exception) &#123;</span><br><span class="line">        log.error(&quot;WebSocketClient exception. &quot;, exception);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="WebSocketConfig"><a href="#WebSocketConfig" class="headerlink" title="WebSocketConfig"></a>WebSocketConfig</h3><p>用 SpringBoot 运行应用时，需要再添加一个配置文件，将 ServerEndpointExporter 注入 Bean 容器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.web.socket.server.standard.ServerEndpointExporter;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 用spring boot运行应用时，打开 @Configuration 注释；使用 war 部署在tomcat时，关闭注释</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@Slf4j</span><br><span class="line">public class WebSocketConfig &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    public ServerEndpointExporter serverEndpointExporter() &#123;</span><br><span class="line">        return new ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>搞定，好快～</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/public/tags/WebSocket/" rel="tag"># WebSocket</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/13/使用taro开发微信小程序——入门/" rel="next" title="使用taro开发微信小程序——入门">
+                <i class="fa fa-chevron-left"></i> 使用taro开发微信小程序——入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+     <div id="gitalk-container"></div>
+  
+
+
+
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="jason song" />
+            
+              <p class="site-author-name" itemprop="name">jason song</p>
+              <p class="site-description motion-element" itemprop="description">创造美好！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件BLOG" target="_blank">阿里中间件BLOG</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://flink-china.org/index.html" title="Flink China" target="_blank">Flink China</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WebSocket-使用场景"><span class="nav-number">1.1.</span> <span class="nav-text">WebSocket 使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">2.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#maven-依赖"><span class="nav-number">2.1.</span> <span class="nav-text">maven 依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端代码"><span class="nav-number">2.2.</span> <span class="nav-text">服务端代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端代码"><span class="nav-number">2.3.</span> <span class="nav-text">客户端代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebSocketConfig"><span class="nav-number">2.4.</span> <span class="nav-text">WebSocketConfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">2.5.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jason song</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '16a173f15eb20b092e69',
+          clientSecret: '17ca6772928121ecd577d36db6af74571116e17c',
+          repo: 'jasonsonghoho.github.io',
+          owner: 'JasonSongHoho',
+          admin: ['JasonSongHoho'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
