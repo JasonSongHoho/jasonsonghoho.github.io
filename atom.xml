@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jasonsonghoho.github.io/"/>
-  <updated>2020-04-01T10:05:37.519Z</updated>
+  <updated>2020-07-21T14:09:58.654Z</updated>
   <id>https://jasonsonghoho.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Flink 架构核心概念</title>
+    <link href="https://jasonsonghoho.github.io/2020/04/11/Flink-%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/"/>
+    <id>https://jasonsonghoho.github.io/2020/04/11/Flink-架构核心概念/</id>
+    <published>2020-04-11T13:51:07.000Z</published>
+    <updated>2020-07-21T14:09:58.654Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="任务和算子链"><a href="#任务和算子链" class="headerlink" title="任务和算子链"></a>任务和算子链</h3><p>先介绍一下：算子(Operator)</p><p>Logical Graph 是一种描述流处理程序的高阶逻辑有向图。边代表输入/输出关系、数据流和数据集之一。算子是 Logical Graph 的节点，执行某种操作，该操作通常由 Function 执行。Source 和 Sink 是数据输入和数据输出的特殊算子。</p><p>分布式计算中，Flink 将算子（operator）子任务（subtask） 链接成一个个的任务（task）。每个任务占一个单独的线程。把多个算子链接成一个任务减少了线程间切换和缓冲的开销，并且在降低延迟的同时提高了整体吞吐量。</p><p>下图的示例数据流由五个子任务执行，因此由五个并行线程执行。</p><img src="/2020/04/11/Flink-架构核心概念/operator.jpg" class="operator"><h4 id="Job-Managers、Task-Managers-和-Clients"><a href="#Job-Managers、Task-Managers-和-Clients" class="headerlink" title="Job Managers、Task Managers 和 Clients"></a>Job Managers、Task Managers 和 Clients</h4><p>Flink 运行环境包含两类进程：<br>JobManagers（“主管” master）主要用来协调分布式计算。它们负责调度任务、协调检查点（checkpoints，参见下面）、协调故障恢复等。至少得有一个 JobManager（必须得有个安排任务的），高可用环境下可以有多个 JobManagers，其中一个正常工作，其它的作为“备胎”。<br>TaskManagers（“搬砖工” woker）主要用来执行任务（确切来说是子任务），缓存产生的数据并交换数据流。TaskManager 也至少得有一个（也不能没有打工的…）。</p><p>JobManagers 和 TaskManagers 有多种启动方式：<br>直接在机器上启动称为 standalone 集群；<br>在容器或资源管理框架 中启动，如 YARN 或 Mesos，TaskManagers 会连接到 JobManagers，通知后者已经可用，然后开始工作。</p><p>客户端（Client）虽然不是运行时（runtime）和程序执行时的一部分，但它被用来准备数据流并向  JobManager  提交。提交完之后客户端就可以断开连接，或者保持连接来接收进度报告。客户端既可以作为 Java / Scala 程序启动，也可以在命令行中运行，如 ./bin/flink run …。</p><img src="/2020/04/11/Flink-架构核心概念/runtime.jpg" class="runtime"><h4 id="Task-Slots-和资源"><a href="#Task-Slots-和资源" class="headerlink" title="Task Slots 和资源"></a>Task Slots 和资源</h4><p>每个 worker（TaskManager）都是一个 JVM 进程，子任务通过其中不同的线程执行。每个 worker 可以接收任务的数量与它拥有的 task slots （可译为任务槽，至少一个）有关。</p><p>每个 task slot 可以认为是 TaskManager 的一份内存资源。例如，具有三个 slot 的 TaskManager 会将其管理的内存资源分成三等份，每个一份。划分资源可以避免子任务之间竞争资源，当然这也意味着它们拥有的资源大小是不可变的。不过 CPU 并没有隔离，只是平分了 woker 的内存资源。</p><p>用户可以通过调整 slot 的数量，调整子任务的隔离方式。若每个 TaskManager 只有一个 slot ，意味着每组任务占一个单独的 JVM 进程（例如，在一个单独的容器中启动）。如果一个 worker 有多个 slot ，则意味着多个子任务共享同一个 JVM。同一个 JVM 中的任务会共享 TCP 连接（通过多路复用技术）和心跳信息，还可以共享数据集和数据结构，从而降低整体开销。</p><img src="/2020/04/11/Flink-架构核心概念/taskSlots.jpg" class="taskSlots"><p>默认情况下，Flink 允许来自同一个 job 的子任务共享 slot，即使它们是不同 task 的子任务。因此，一个 slot 可能会负责这个 job 的一整条路径（结合图1理解）。允许 slot 共享有两个好处：</p><p>Flink 集群需要的 slot 与 job 中使用的最高并行度恰好一样多。这样不需要计算程序总共包含多少个任务（任务可能具有多种并行度）。</p><p>资源利用率更高。slot 不共享时，简单的子任务（如：source/map()）将会占用和复杂的子任务（如：window）一样多的资源。通过共享 slot，将示例中的并行度从 2 增加到 6 可以充分利用 slot 的资源，还可以确保繁重的子任务能在多个 TaskManagers 之间平均分配。</p><img src="/2020/04/11/Flink-架构核心概念/slots2.jpg" class="slots"><p>APIs 中包含了 resource group 机制，可以用来避免不必要的 slot 共享。</p><p>根据经验，slot 数量最好与 CPU 核数一致。使用超线程（hyper-threading）时，每个 slot 可以占用 2 个或更多的硬件线程。</p><h4 id="Checkpoint"><a href="#Checkpoint" class="headerlink" title="Checkpoint"></a>Checkpoint</h4><p>Flink 中的每个方法或算子都可以是有状态的。有状态的方法会在处理每个元素/事件的时候记录状态，从而使各种算子更加准确（因为可恢复）。Flink 使用 checkpoint（检查点）机制来保存状态。Checkpoint 能够恢复状态以及在数据流中的位置，从而保证无故障执行。</p><h4 id="State-Backends"><a href="#State-Backends" class="headerlink" title="State Backends"></a>State Backends</h4><p>不同类型的 state backend 会影响 key/values 索引存储时的数据结构。一种是将数据存储在基于内存的 HashMap 中，另一种会使用 RocksDB 存储。state backend 定义了数据结构的保存状态（state），定义了如何创建 key/values 的快照，并将该快照存储为 checkpoint 的一部分。</p><img src="/2020/04/11/Flink-架构核心概念/stateBackend.jpg" class="stateBackend"><h4 id="Savepoints"><a href="#Savepoints" class="headerlink" title="Savepoints"></a>Savepoints</h4><p>用 Data Stream API 编写的程序可以从 savepoint 恢复执行。Savepoints 可以保证在更新、升级代码和 Flink 集群配置时，不丢失任何状态。</p><p>Savepoints 可以理解为手动触发的 checkpoints，类似常规的 checkpoint 机制，它会对程序创建一个快照并将其保存到 state backend。程序会定期在 worker 上创建快照并生成 checkpoints。Flink 只需要最后一个完整的 checkpoint 来确保恢复，一旦创建好了新的 checkpoint，旧的就可以丢弃。</p><p>Savepoints 类似于 checkpoints，只不过是手动触发的，并且在新的 checkpoint 创建好后不会自动过期。你可以通过命令行来创建 Savepoints，或者在取消一个 job 时通过 REST API 来创建。</p><p>翻译自<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/concepts/runtime.html" target="_blank" rel="noopener">官方文档</a></p><p><a href="http://music.163.com/song?id=548808659&amp;userid=312410491" target="_blank" rel="noopener">通透</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;任务和算子链&quot;&gt;&lt;a href=&quot;#任务和算子链&quot; class=&quot;headerlink&quot; title=&quot;任务和算子链&quot;&gt;&lt;/a&gt;任务和算子链&lt;/h3&gt;&lt;p&gt;先介绍一下：算子(Operator)&lt;/p&gt;
+&lt;p&gt;Logical Graph 是一种描述流处理程序的高阶逻
+      
+    
+    </summary>
+    
+    
+      <category term="大数据" scheme="https://jasonsonghoho.github.io/public/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="中间件" scheme="https://jasonsonghoho.github.io/public/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+  </entry>
   
   <entry>
     <title>5分钟了解算法开发的主要流程</title>
@@ -138,9 +164,9 @@
     </summary>
     
     
-      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
-    
       <category term="中间件" scheme="https://jasonsonghoho.github.io/public/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
     
   </entry>
   
@@ -263,9 +289,9 @@
       <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
     
     
-      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
-    
       <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
     
       <category term="HashMap" scheme="https://jasonsonghoho.github.io/public/tags/HashMap/"/>
     
@@ -294,9 +320,9 @@
       <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
     
     
-      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
-    
       <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
     
       <category term="HashMap" scheme="https://jasonsonghoho.github.io/public/tags/HashMap/"/>
     
@@ -325,9 +351,9 @@
       <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
     
     
-      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
-    
       <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
+    
+      <category term="Java" scheme="https://jasonsonghoho.github.io/public/tags/Java/"/>
     
       <category term="HashMap" scheme="https://jasonsonghoho.github.io/public/tags/HashMap/"/>
     
@@ -548,35 +574,6 @@
       <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
     
       <category term="设计模式" scheme="https://jasonsonghoho.github.io/public/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>园丁与盆栽（JVM 垃圾回收）</title>
-    <link href="https://jasonsonghoho.github.io/2018/05/01/%E5%9B%AD%E4%B8%81%E4%B8%8E%E7%9B%86%E6%A0%BD/"/>
-    <id>https://jasonsonghoho.github.io/2018/05/01/园丁与盆栽/</id>
-    <published>2018-05-01T02:38:55.000Z</published>
-    <updated>2018-09-22T02:52:12.553Z</updated>
-    
-    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3PnfJQixg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3PnfJQixg</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3PnfJQixg&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/2GO3Sc4mD8BVN3P
-      
-    
-    </summary>
-    
-      <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
-    
-    
-      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
-    
-      <category term="JVM" scheme="https://jasonsonghoho.github.io/public/tags/JVM/"/>
-    
-      <category term="GC" scheme="https://jasonsonghoho.github.io/public/tags/GC/"/>
     
   </entry>
   
