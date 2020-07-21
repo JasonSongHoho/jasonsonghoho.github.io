@@ -370,8 +370,7 @@
 <h4 id="Savepoints"><a href="#Savepoints" class="headerlink" title="Savepoints"></a>Savepoints</h4><p>用 Data Stream API 编写的程序可以从 savepoint 恢复执行。Savepoints 可以保证在更新、升级代码和 Flink 集群配置时，不丢失任何状态。</p>
 <p>Savepoints 可以理解为手动触发的 checkpoints，类似常规的 checkpoint 机制，它会对程序创建一个快照并将其保存到 state backend。程序会定期在 worker 上创建快照并生成 checkpoints。Flink 只需要最后一个完整的 checkpoint 来确保恢复，一旦创建好了新的 checkpoint，旧的就可以丢弃。</p>
 <p>Savepoints 类似于 checkpoints，只不过是手动触发的，并且在新的 checkpoint 创建好后不会自动过期。你可以通过命令行来创建 Savepoints，或者在取消一个 job 时通过 REST API 来创建。</p>
-<p>翻译自<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/concepts/runtime.html" target="_blank" rel="noopener">官方文档</a></p>
-<p><a href="http://music.163.com/song?id=548808659&amp;userid=312410491" target="_blank" rel="noopener">通透</a></p>
+<p><em>翻译自<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/concepts/runtime.html" target="_blank" rel="noopener">官方文档</a></em></p>
 
           
         
