@@ -19,7 +19,7 @@ Logical Graph 是一种描述流处理程序的高阶逻辑有向图。边代表
 
 下图的示例数据流由五个子任务执行，因此由五个并行线程执行。
 
-{% asset_img operator  operator.jpg %}
+{% asset_img operator.jpg operator  %}
 
 #### Job Managers、Task Managers 和 Clients
 
@@ -33,7 +33,7 @@ JobManagers 和 TaskManagers 有多种启动方式：
 
 客户端（Client）虽然不是运行时（runtime）和程序执行时的一部分，但它被用来准备数据流并向  JobManager  提交。提交完之后客户端就可以断开连接，或者保持连接来接收进度报告。客户端既可以作为 Java / Scala 程序启动，也可以在命令行中运行，如 ./bin/flink run ...。
 
-{% asset_img runtime  runtime.jpg %}
+{% asset_img runtime.jpg runtime  %}
 
 #### Task Slots 和资源
 
@@ -43,7 +43,7 @@ JobManagers 和 TaskManagers 有多种启动方式：
 
 用户可以通过调整 slot 的数量，调整子任务的隔离方式。若每个 TaskManager 只有一个 slot ，意味着每组任务占一个单独的 JVM 进程（例如，在一个单独的容器中启动）。如果一个 worker 有多个 slot ，则意味着多个子任务共享同一个 JVM。同一个 JVM 中的任务会共享 TCP 连接（通过多路复用技术）和心跳信息，还可以共享数据集和数据结构，从而降低整体开销。
 
-{% asset_img taskSlots  taskSlots.jpg %}
+{% asset_img  taskSlots.jpg taskSlots %}
 
 默认情况下，Flink 允许来自同一个 job 的子任务共享 slot，即使它们是不同 task 的子任务。因此，一个 slot 可能会负责这个 job 的一整条路径（结合图1理解）。允许 slot 共享有两个好处：
 
@@ -51,7 +51,7 @@ Flink 集群需要的 slot 与 job 中使用的最高并行度恰好一样多。
 
 资源利用率更高。slot 不共享时，简单的子任务（如：source/map()）将会占用和复杂的子任务（如：window）一样多的资源。通过共享 slot，将示例中的并行度从 2 增加到 6 可以充分利用 slot 的资源，还可以确保繁重的子任务能在多个 TaskManagers 之间平均分配。
 
-{% asset_img slots  slots2.jpg %}
+{% asset_img  slots2.jpg slots %}
 
 APIs 中包含了 resource group 机制，可以用来避免不必要的 slot 共享。
 
@@ -65,7 +65,7 @@ Flink 中的每个方法或算子都可以是有状态的。有状态的方法�
 
 不同类型的 state backend 会影响 key/values 索引存储时的数据结构。一种是将数据存储在基于内存的 HashMap 中，另一种会使用 RocksDB 存储。state backend 定义了数据结构的保存状态（state），定义了如何创建 key/values 的快照，并将该快照存储为 checkpoint 的一部分。
 
-{% asset_img  stateBackend  stateBackend.jpg %}
+{% asset_img   stateBackend.jpg stateBackend %}
 
 #### Savepoints
 
