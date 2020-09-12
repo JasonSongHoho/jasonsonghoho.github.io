@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jasonsonghoho.github.io/"/>
-  <updated>2020-07-22T14:44:53.544Z</updated>
+  <updated>2020-09-12T14:05:19.771Z</updated>
   <id>https://jasonsonghoho.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Cassandra 3.x 数据读取过程【译】</title>
+    <link href="https://jasonsonghoho.github.io/2020/08/11/Cassandra-%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E8%BF%87%E7%A8%8B/"/>
+    <id>https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/</id>
+    <published>2020-08-11T13:51:07.000Z</published>
+    <updated>2020-09-12T14:05:19.771Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近对 LSM 树、Cassandra 的读取过程感兴趣，奈何印象模糊，故去官网查阅、复习了一下。顺便译成此文。</p><p>Cassandra、HBase、LevelDB 均是采用了 LSM 树进行存储，故三者的读写过程都大同小异，都具有 commitLog、memTable、SSTable(LSM) 结构，理解本文可举一反三。</p><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>读取时，Cassandra 会合并 MemTable 和至少一个 SSTable 的结果。</p><p>Cassandra 寻找数据的过程有多个步骤。从 MemTable 中的数据开始，以 SSTables 结尾：</p><ol><li>检查 MemTable </li><li>检查行缓存（如果启用）</li><li>检查布隆过滤器</li><li>检查分区键缓存（如果启用）</li><li>如果在分区键缓存中找到了分区键，则直接转到压缩偏移量映射表；如果未找到分区键，则检查 Partition Summary ，选中 Partition Summary 后，访问对应的分区索引</li><li>使用压缩偏移量映射表定位磁盘上的数据</li><li>从磁盘上的 SSTable 中获取数据</li></ol><img src="/2020/08/11/Cassandra-数据读取过程/dml_caching-reads_12.png" title="读请求流程"><img src="/2020/08/11/Cassandra-数据读取过程/ops_how-cache-works.png" title="行缓存和键缓存请求流"><h3 id="MemTable"><a href="#MemTable" class="headerlink" title="MemTable"></a>MemTable</h3><p>如果 MemTable 具有所需的分区数据，则读取该数据，然后将其与 SSTables 中的数据合并。访问 SSTable 数据的步骤如下。</p><h3 id="Row-Cache（行缓存）"><a href="#Row-Cache（行缓存）" class="headerlink" title="Row Cache（行缓存）"></a>Row Cache（行缓存）</h3><p>它在所有数据库中都是典型的，读取速度最快，通过将访问频繁的数据放入内存中实现。操作系统页缓存（page cache）最适合提高读取性能，尽管行缓存也可以为读取密集型操作（读取操作占负载的95％）提供一些改进。行缓存禁止用于写密集型操作。如果启用行缓存，会将 SSTables 中的部分分区数据存储在内存中。在 Cassandra 2.2和更高版本中，它存储在堆外内存中，这样减轻了 JVM 的 GC 压力。当缓存已满时，行缓存使用 LRU 策略回收内存。</p><p>行缓存大小以及要存储的行数都是可配置的。配置存储行数很重要，可以使类似查询“最后10项”的速度非常快。如果启用了行缓存，则将从行缓存中读取所需的分区数据，从而有可能节省两次从磁盘上查找的时间。行缓存中存储的行是经常访问的行，在访问它们时，这些行将合并并从 SSTable 保存到行缓存中。存储后，数据可用于以后的查询。行缓存不可以通过写操作添加。如果对该行进行写操作，则该行缓存将失效，直到读取该行后才再次被缓存。同样，如果更新分区，则会从缓存中逐出整个分区。如果行缓存中没有想要的数据，则检查布隆过滤器。</p><h3 id="Bloom-Filter（布隆过滤器）"><a href="#Bloom-Filter（布隆过滤器）" class="headerlink" title="Bloom Filter（布隆过滤器）"></a>Bloom Filter（布隆过滤器）</h3><p>首先，Cassandra 会检查布隆过滤器，以查找哪些 SSTables 可能具有请求分区数据。布隆过滤器存储在堆外存储器中。每个 SSTable 都有一个关联的布隆过滤器。布隆过滤器可以确定 SSTable 不包含哪些分区的数据。布隆过滤器还可以查出相应分区数据存储在一个 SSTable 中的可能性。它可以通过缩小键池大小来提高查找分区键的速度。但是，由于布隆过滤器是一个概率函数，因此可能导致误报。布隆过滤器找出的 SSTable 中也可能没有对应的数据。如果布隆过滤器不可以确定是哪个 SSTable ，Cassandra 会检查分区键缓存。</p><p>每十亿个分区，布隆过滤器大约会占用1-2GB大小空间。在极端情况下，每行可以对应一个分区，因此在一台机器上可以轻松拥有数十亿个这样的条目。如果要以内存换取性能，则布隆过滤器是可调的。</p><h3 id="Partition-Key-Cache（分区键缓存）"><a href="#Partition-Key-Cache（分区键缓存）" class="headerlink" title="Partition Key Cache（分区键缓存）"></a>Partition Key Cache（分区键缓存）</h3><p>如果启用分区键缓存，会将分区索引存储在堆外内存中。键缓存占内存小，且可配置，每次“命中”都可以减少一次查找。如果在键缓存中找到分区键，则可以直接转到压缩偏移量映射表，从磁盘上找到对应的数据。分区键缓存一旦预热就可以更好地发挥作用，并且可以大大提高冷启动时读取的性能。如果节点上的内存非常有限，可以限定保存在键缓存中的分区键的数量。如果在键缓存中找不到分区键，则搜索 Partition Summary。</p><p>分区键缓存的大小以及存储在键缓存中的分区键的数量都是可配置的。</p><h3 id="Partition-Summary（分区稀疏索引？这个直接翻译不太好～）"><a href="#Partition-Summary（分区稀疏索引？这个直接翻译不太好～）" class="headerlink" title="Partition Summary（分区稀疏索引？这个直接翻译不太好～）"></a>Partition Summary（分区稀疏索引？这个直接翻译不太好～）</h3><p>Partition Summary 是一种堆外内存结构，存储了分区索引的采样（可以理解为分区稀疏索引～）。分区索引包含所有分区键，而 Partition Summary 每隔 X 个键进行采样，并映射索引文件中第 Xth 键的位置。例如，如果 Partition Summary 设置为每20个键采样一次，它会将 SSTable 文件的开头作为第一个键，然后是第20个键及其在文件中的位置，依此类推。虽然不如分区键的位置那么精确，但是 Partition Summary 可以缩短扫描时间。找到可能的分区键值的范围后，然后确定分区索引。</p><p>通过配置采样频率，您可以以内存换取性能，Partition Summary 的粒度越小，使用的内存就越多。配置 <code>index_interval</code> 属性可以更改采样频率。可以通过配置 <code>index_summary_capacity_in_mb</code> 属性设置占用固定大小的内存，默认为堆大小的5％。</p><h3 id="Partition-Index（分区索引）"><a href="#Partition-Index（分区索引）" class="headerlink" title="Partition Index（分区索引）"></a>Partition Index（分区索引）</h3><p>分区索引位于磁盘上，存储了映射到所有分区键的位置。检查了 Partition Summary 中的分区键范围后，然后转到分区索引以查找所需分区键的位置。对范围内的列将进行遍历查找。使用找到的信息，分区索引进入压缩偏移量映射表，以在磁盘上找到包含数据的压缩块。如果必须搜索分区索引，则需要两次磁盘搜索才能找到所需的数据。</p><h3 id="Compression-offset-map（压缩偏移量映射表）"><a href="#Compression-offset-map（压缩偏移量映射表）" class="headerlink" title="Compression offset map（压缩偏移量映射表）"></a>Compression offset map（压缩偏移量映射表）</h3><p>压缩偏移量映射表存储了分区数据的确切位置。它存储在堆外内存中，可以通过<strong>分区键缓存</strong>或<strong>分区索引</strong>进行访问。从压缩偏移量映射表确定了磁盘位置后，就可以从对应的的 SSTable 中查询出被压缩的分区数据。</p><p>注意：在分区内，并非查询所有行的代价都相同。由于不需要查询分区级索引，因此查询分区的最开始（第一行，由自定义键决定）的开销稍低一些。</p><p>每TB数据，压缩偏移量映射表将占用 1-3 GB。压缩数据越多，压缩块的数量就越多，压缩偏移量映射表也就越大。尽管使用压缩偏移量映射表会消耗 CPU 资源，默认情况下还是会启用压缩。启用压缩将使页缓存更有效，通常来说，利大于弊。</p><p><em>翻译自<a href="https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/dml/dmlAboutReads.html" target="_blank" rel="noopener">官方文档</a></em></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;最近对 LSM 树、Cassandra 的读取过程感兴趣，奈何印象模糊，故去官网查阅、复习了一下。顺便译成此文。&lt;/p&gt;
+&lt;p&gt;Cassan
+      
+    
+    </summary>
+    
+    
+      <category term="Cassandra" scheme="https://jasonsonghoho.github.io/public/tags/Cassandra/"/>
+    
+      <category term="翻译" scheme="https://jasonsonghoho.github.io/public/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
   
   <entry>
     <title>一文了解 Spring Starter 原理</title>
@@ -44,9 +70,9 @@
     <link href="https://jasonsonghoho.github.io/2020/04/11/Flink-%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/"/>
     <id>https://jasonsonghoho.github.io/2020/04/11/Flink-架构核心概念/</id>
     <published>2020-04-11T13:51:07.000Z</published>
-    <updated>2020-07-21T14:14:24.871Z</updated>
+    <updated>2020-09-12T11:44:30.524Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="任务和算子链"><a href="#任务和算子链" class="headerlink" title="任务和算子链"></a>任务和算子链</h3><p>先介绍一下：算子(Operator)</p><p>Logical Graph 是一种描述流处理程序的高阶逻辑有向图。边代表输入/输出关系、数据流和数据集之一。算子是 Logical Graph 的节点，执行某种操作，该操作通常由 Function 执行。Source 和 Sink 是数据输入和数据输出的特殊算子。</p><p>分布式计算中，Flink 将算子（operator）子任务（subtask） 链接成一个个的任务（task）。每个任务占一个单独的线程。把多个算子链接成一个任务减少了线程间切换和缓冲的开销，并且在降低延迟的同时提高了整体吞吐量。</p><p>下图的示例数据流由五个子任务执行，因此由五个并行线程执行。</p><img src="/2020/04/11/Flink-架构核心概念/operator.jpg" class="operator"><h4 id="Job-Managers、Task-Managers-和-Clients"><a href="#Job-Managers、Task-Managers-和-Clients" class="headerlink" title="Job Managers、Task Managers 和 Clients"></a>Job Managers、Task Managers 和 Clients</h4><p>Flink 运行环境包含两类进程：<br>JobManagers（“主管” master）主要用来协调分布式计算。它们负责调度任务、协调检查点（checkpoints，参见下面）、协调故障恢复等。至少得有一个 JobManager（必须得有个安排任务的），高可用环境下可以有多个 JobManagers，其中一个正常工作，其它的作为“备胎”。<br>TaskManagers（“搬砖工” woker）主要用来执行任务（确切来说是子任务），缓存产生的数据并交换数据流。TaskManager 也至少得有一个（也不能没有打工的…）。</p><p>JobManagers 和 TaskManagers 有多种启动方式：<br>直接在机器上启动称为 standalone 集群；<br>在容器或资源管理框架 中启动，如 YARN 或 Mesos，TaskManagers 会连接到 JobManagers，通知后者已经可用，然后开始工作。</p><p>客户端（Client）虽然不是运行时（runtime）和程序执行时的一部分，但它被用来准备数据流并向  JobManager  提交。提交完之后客户端就可以断开连接，或者保持连接来接收进度报告。客户端既可以作为 Java / Scala 程序启动，也可以在命令行中运行，如 ./bin/flink run …。</p><img src="/2020/04/11/Flink-架构核心概念/runtime.jpg" class="runtime"><h4 id="Task-Slots-和资源"><a href="#Task-Slots-和资源" class="headerlink" title="Task Slots 和资源"></a>Task Slots 和资源</h4><p>每个 worker（TaskManager）都是一个 JVM 进程，子任务通过其中不同的线程执行。每个 worker 可以接收任务的数量与它拥有的 task slots （可译为任务槽，至少一个）有关。</p><p>每个 task slot 可以认为是 TaskManager 的一份内存资源。例如，具有三个 slot 的 TaskManager 会将其管理的内存资源分成三等份，每个一份。划分资源可以避免子任务之间竞争资源，当然这也意味着它们拥有的资源大小是不可变的。不过 CPU 并没有隔离，只是平分了 woker 的内存资源。</p><p>用户可以通过调整 slot 的数量，调整子任务的隔离方式。若每个 TaskManager 只有一个 slot ，意味着每组任务占一个单独的 JVM 进程（例如，在一个单独的容器中启动）。如果一个 worker 有多个 slot ，则意味着多个子任务共享同一个 JVM。同一个 JVM 中的任务会共享 TCP 连接（通过多路复用技术）和心跳信息，还可以共享数据集和数据结构，从而降低整体开销。</p><img src="/2020/04/11/Flink-架构核心概念/taskSlots.jpg" class="taskSlots"><p>默认情况下，Flink 允许来自同一个 job 的子任务共享 slot，即使它们是不同 task 的子任务。因此，一个 slot 可能会负责这个 job 的一整条路径（结合图1理解）。允许 slot 共享有两个好处：</p><p>Flink 集群需要的 slot 与 job 中使用的最高并行度恰好一样多。这样不需要计算程序总共包含多少个任务（任务可能具有多种并行度）。</p><p>资源利用率更高。slot 不共享时，简单的子任务（如：source/map()）将会占用和复杂的子任务（如：window）一样多的资源。通过共享 slot，将示例中的并行度从 2 增加到 6 可以充分利用 slot 的资源，还可以确保繁重的子任务能在多个 TaskManagers 之间平均分配。</p><img src="/2020/04/11/Flink-架构核心概念/slots2.jpg" class="slots"><p>APIs 中包含了 resource group 机制，可以用来避免不必要的 slot 共享。</p><p>根据经验，slot 数量最好与 CPU 核数一致。使用超线程（hyper-threading）时，每个 slot 可以占用 2 个或更多的硬件线程。</p><h4 id="Checkpoint"><a href="#Checkpoint" class="headerlink" title="Checkpoint"></a>Checkpoint</h4><p>Flink 中的每个方法或算子都可以是有状态的。有状态的方法会在处理每个元素/事件的时候记录状态，从而使各种算子更加准确（因为可恢复）。Flink 使用 checkpoint（检查点）机制来保存状态。Checkpoint 能够恢复状态以及在数据流中的位置，从而保证无故障执行。</p><h4 id="State-Backends"><a href="#State-Backends" class="headerlink" title="State Backends"></a>State Backends</h4><p>不同类型的 state backend 会影响 key/values 索引存储时的数据结构。一种是将数据存储在基于内存的 HashMap 中，另一种会使用 RocksDB 存储。state backend 定义了数据结构的保存状态（state），定义了如何创建 key/values 的快照，并将该快照存储为 checkpoint 的一部分。</p><img src="/2020/04/11/Flink-架构核心概念/stateBackend.jpg" class="stateBackend"><h4 id="Savepoints"><a href="#Savepoints" class="headerlink" title="Savepoints"></a>Savepoints</h4><p>用 Data Stream API 编写的程序可以从 savepoint 恢复执行。Savepoints 可以保证在更新、升级代码和 Flink 集群配置时，不丢失任何状态。</p><p>Savepoints 可以理解为手动触发的 checkpoints，类似常规的 checkpoint 机制，它会对程序创建一个快照并将其保存到 state backend。程序会定期在 worker 上创建快照并生成 checkpoints。Flink 只需要最后一个完整的 checkpoint 来确保恢复，一旦创建好了新的 checkpoint，旧的就可以丢弃。</p><p>Savepoints 类似于 checkpoints，只不过是手动触发的，并且在新的 checkpoint 创建好后不会自动过期。你可以通过命令行来创建 Savepoints，或者在取消一个 job 时通过 REST API 来创建。</p><p><em>翻译自<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/concepts/runtime.html" target="_blank" rel="noopener">官方文档</a></em></p>]]></content>
+    <content type="html"><![CDATA[<h3 id="任务和算子链"><a href="#任务和算子链" class="headerlink" title="任务和算子链"></a>任务和算子链</h3><p>先介绍一下：算子(Operator)</p><p>Logical Graph 是一种描述流处理程序的高阶逻辑有向图。边代表输入/输出关系、数据流和数据集之一。算子是 Logical Graph 的节点，执行某种操作，该操作通常由 Function 执行。Source 和 Sink 是数据输入和数据输出的特殊算子。</p><p>分布式计算中，Flink 将算子（operator）子任务（subtask） 链接成一个个的任务（task）。每个任务占一个单独的线程。把多个算子链接成一个任务减少了线程间切换和缓冲的开销，并且在降低延迟的同时提高了整体吞吐量。</p><p>下图的示例数据流由五个子任务执行，因此由五个并行线程执行。</p><img src="/2020/04/11/Flink-架构核心概念/operator.jpg" title="operator"><h4 id="Job-Managers、Task-Managers-和-Clients"><a href="#Job-Managers、Task-Managers-和-Clients" class="headerlink" title="Job Managers、Task Managers 和 Clients"></a>Job Managers、Task Managers 和 Clients</h4><p>Flink 运行环境包含两类进程：<br>JobManagers（“主管” master）主要用来协调分布式计算。它们负责调度任务、协调检查点（checkpoints，参见下面）、协调故障恢复等。至少得有一个 JobManager（必须得有个安排任务的），高可用环境下可以有多个 JobManagers，其中一个正常工作，其它的作为“备胎”。<br>TaskManagers（“搬砖工” woker）主要用来执行任务（确切来说是子任务），缓存产生的数据并交换数据流。TaskManager 也至少得有一个（也不能没有打工的…）。</p><p>JobManagers 和 TaskManagers 有多种启动方式：<br>直接在机器上启动称为 standalone 集群；<br>在容器或资源管理框架 中启动，如 YARN 或 Mesos，TaskManagers 会连接到 JobManagers，通知后者已经可用，然后开始工作。</p><p>客户端（Client）虽然不是运行时（runtime）和程序执行时的一部分，但它被用来准备数据流并向  JobManager  提交。提交完之后客户端就可以断开连接，或者保持连接来接收进度报告。客户端既可以作为 Java / Scala 程序启动，也可以在命令行中运行，如 ./bin/flink run …。</p><img src="/2020/04/11/Flink-架构核心概念/runtime.jpg" title="runtime"><h4 id="Task-Slots-和资源"><a href="#Task-Slots-和资源" class="headerlink" title="Task Slots 和资源"></a>Task Slots 和资源</h4><p>每个 worker（TaskManager）都是一个 JVM 进程，子任务通过其中不同的线程执行。每个 worker 可以接收任务的数量与它拥有的 task slots （可译为任务槽，至少一个）有关。</p><p>每个 task slot 可以认为是 TaskManager 的一份内存资源。例如，具有三个 slot 的 TaskManager 会将其管理的内存资源分成三等份，每个一份。划分资源可以避免子任务之间竞争资源，当然这也意味着它们拥有的资源大小是不可变的。不过 CPU 并没有隔离，只是平分了 woker 的内存资源。</p><p>用户可以通过调整 slot 的数量，调整子任务的隔离方式。若每个 TaskManager 只有一个 slot ，意味着每组任务占一个单独的 JVM 进程（例如，在一个单独的容器中启动）。如果一个 worker 有多个 slot ，则意味着多个子任务共享同一个 JVM。同一个 JVM 中的任务会共享 TCP 连接（通过多路复用技术）和心跳信息，还可以共享数据集和数据结构，从而降低整体开销。</p><img src="/2020/04/11/Flink-架构核心概念/taskSlots.jpg" title="taskSlots"><p>默认情况下，Flink 允许来自同一个 job 的子任务共享 slot，即使它们是不同 task 的子任务。因此，一个 slot 可能会负责这个 job 的一整条路径（结合图1理解）。允许 slot 共享有两个好处：</p><p>Flink 集群需要的 slot 与 job 中使用的最高并行度恰好一样多。这样不需要计算程序总共包含多少个任务（任务可能具有多种并行度）。</p><p>资源利用率更高。slot 不共享时，简单的子任务（如：source/map()）将会占用和复杂的子任务（如：window）一样多的资源。通过共享 slot，将示例中的并行度从 2 增加到 6 可以充分利用 slot 的资源，还可以确保繁重的子任务能在多个 TaskManagers 之间平均分配。</p><img src="/2020/04/11/Flink-架构核心概念/slots2.jpg" title="slots"><p>APIs 中包含了 resource group 机制，可以用来避免不必要的 slot 共享。</p><p>根据经验，slot 数量最好与 CPU 核数一致。使用超线程（hyper-threading）时，每个 slot 可以占用 2 个或更多的硬件线程。</p><h4 id="Checkpoint"><a href="#Checkpoint" class="headerlink" title="Checkpoint"></a>Checkpoint</h4><p>Flink 中的每个方法或算子都可以是有状态的。有状态的方法会在处理每个元素/事件的时候记录状态，从而使各种算子更加准确（因为可恢复）。Flink 使用 checkpoint（检查点）机制来保存状态。Checkpoint 能够恢复状态以及在数据流中的位置，从而保证无故障执行。</p><h4 id="State-Backends"><a href="#State-Backends" class="headerlink" title="State Backends"></a>State Backends</h4><p>不同类型的 state backend 会影响 key/values 索引存储时的数据结构。一种是将数据存储在基于内存的 HashMap 中，另一种会使用 RocksDB 存储。state backend 定义了数据结构的保存状态（state），定义了如何创建 key/values 的快照，并将该快照存储为 checkpoint 的一部分。</p><img src="/2020/04/11/Flink-架构核心概念/stateBackend.jpg" title="stateBackend"><h4 id="Savepoints"><a href="#Savepoints" class="headerlink" title="Savepoints"></a>Savepoints</h4><p>用 Data Stream API 编写的程序可以从 savepoint 恢复执行。Savepoints 可以保证在更新、升级代码和 Flink 集群配置时，不丢失任何状态。</p><p>Savepoints 可以理解为手动触发的 checkpoints，类似常规的 checkpoint 机制，它会对程序创建一个快照并将其保存到 state backend。程序会定期在 worker 上创建快照并生成 checkpoints。Flink 只需要最后一个完整的 checkpoint 来确保恢复，一旦创建好了新的 checkpoint，旧的就可以丢弃。</p><p>Savepoints 类似于 checkpoints，只不过是手动触发的，并且在新的 checkpoint 创建好后不会自动过期。你可以通过命令行来创建 Savepoints，或者在取消一个 job 时通过 REST API 来创建。</p><p><em>翻译自<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/concepts/runtime.html" target="_blank" rel="noopener">官方文档</a></em></p>]]></content>
     
     <summary type="html">
     
@@ -541,35 +567,6 @@
       <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
     
       <category term="Linux" scheme="https://jasonsonghoho.github.io/public/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>克拉丝的面试</title>
-    <link href="https://jasonsonghoho.github.io/2018/05/13/%E5%85%8B%E6%8B%89%E4%B8%9D%E7%9A%84%E9%9D%A2%E8%AF%95/"/>
-    <id>https://jasonsonghoho.github.io/2018/05/13/克拉丝的面试/</id>
-    <published>2018-05-13T02:39:39.000Z</published>
-    <updated>2018-09-22T02:52:46.942Z</updated>
-    
-    <content type="html"><![CDATA[<p>见链接：<a href="https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU_mAUWbA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU_mAUWbA</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;见链接：&lt;a href=&quot;https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU_mAUWbA&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://mp.weixin.qq.com/s/boQUsfwjf0pPtcU
-      
-    
-    </summary>
-    
-      <category term="Java" scheme="https://jasonsonghoho.github.io/categories/Java/"/>
-    
-    
-      <category term="公众号文章" scheme="https://jasonsonghoho.github.io/public/tags/%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%87%E7%AB%A0/"/>
-    
-      <category term="JVM" scheme="https://jasonsonghoho.github.io/public/tags/JVM/"/>
-    
-      <category term="类加载" scheme="https://jasonsonghoho.github.io/public/tags/%E7%B1%BB%E5%8A%A0%E8%BD%BD/"/>
     
   </entry>
   

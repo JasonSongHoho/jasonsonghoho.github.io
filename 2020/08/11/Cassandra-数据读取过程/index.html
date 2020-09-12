@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Cassandra,翻译," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="jason's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="前言最近对 LSM 树、Cassandra 的读取过程感兴趣，奈何印象模糊，故去官网查阅、复习了一下。顺便译成此文。 Cassandra、HBase、LevelDB 均是采用了 LSM 树进行存储，故三者的读写过程都大同小异，都具有 commitLog、memTable、SSTable(LSM) 结构，理解本文可举一反三。 简介读取时，Cassandra 会合并 MemTable 和至少一个 SS">
+<meta name="keywords" content="Cassandra,翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra 3.x 数据读取过程【译】">
+<meta property="og:url" content="https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/index.html">
+<meta property="og:site_name" content="jason&#39;s blog">
+<meta property="og:description" content="前言最近对 LSM 树、Cassandra 的读取过程感兴趣，奈何印象模糊，故去官网查阅、复习了一下。顺便译成此文。 Cassandra、HBase、LevelDB 均是采用了 LSM 树进行存储，故三者的读写过程都大同小异，都具有 commitLog、memTable、SSTable(LSM) 结构，理解本文可举一反三。 简介读取时，Cassandra 会合并 MemTable 和至少一个 SS">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/dml_caching-reads_12.png">
+<meta property="og:image" content="https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/ops_how-cache-works.png">
+<meta property="og:updated_time" content="2020-09-12T14:05:19.771Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cassandra 3.x 数据读取过程【译】">
+<meta name="twitter:description" content="前言最近对 LSM 树、Cassandra 的读取过程感兴趣，奈何印象模糊，故去官网查阅、复习了一下。顺便译成此文。 Cassandra、HBase、LevelDB 均是采用了 LSM 树进行存储，故三者的读写过程都大同小异，都具有 commitLog、memTable、SSTable(LSM) 结构，理解本文可举一反三。 简介读取时，Cassandra 会合并 MemTable 和至少一个 SS">
+<meta name="twitter:image" content="https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/dml_caching-reads_12.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/"/>
+
+
+
+
+
+  <title>Cassandra 3.x 数据读取过程【译】 | jason's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?72b386cef7d7f109725797247e159526";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jason's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jasonsonghoho.github.io/2020/08/11/Cassandra-数据读取过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jason song">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jason's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Cassandra 3.x 数据读取过程【译】</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-11T21:51:07+08:00">
+                2020-08-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近对 LSM 树、Cassandra 的读取过程感兴趣，奈何印象模糊，故去官网查阅、复习了一下。顺便译成此文。</p>
+<p>Cassandra、HBase、LevelDB 均是采用了 LSM 树进行存储，故三者的读写过程都大同小异，都具有 commitLog、memTable、SSTable(LSM) 结构，理解本文可举一反三。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>读取时，Cassandra 会合并 MemTable 和至少一个 SSTable 的结果。</p>
+<p>Cassandra 寻找数据的过程有多个步骤。从 MemTable 中的数据开始，以 SSTables 结尾：</p>
+<ol>
+<li>检查 MemTable </li>
+<li>检查行缓存（如果启用）</li>
+<li>检查布隆过滤器</li>
+<li>检查分区键缓存（如果启用）</li>
+<li>如果在分区键缓存中找到了分区键，则直接转到压缩偏移量映射表；如果未找到分区键，则检查 Partition Summary ，选中 Partition Summary 后，访问对应的分区索引</li>
+<li>使用压缩偏移量映射表定位磁盘上的数据</li>
+<li>从磁盘上的 SSTable 中获取数据</li>
+</ol>
+<img src="/2020/08/11/Cassandra-数据读取过程/dml_caching-reads_12.png" title="读请求流程">
+<img src="/2020/08/11/Cassandra-数据读取过程/ops_how-cache-works.png" title="行缓存和键缓存请求流">
+<h3 id="MemTable"><a href="#MemTable" class="headerlink" title="MemTable"></a>MemTable</h3><p>如果 MemTable 具有所需的分区数据，则读取该数据，然后将其与 SSTables 中的数据合并。访问 SSTable 数据的步骤如下。</p>
+<h3 id="Row-Cache（行缓存）"><a href="#Row-Cache（行缓存）" class="headerlink" title="Row Cache（行缓存）"></a>Row Cache（行缓存）</h3><p>它在所有数据库中都是典型的，读取速度最快，通过将访问频繁的数据放入内存中实现。操作系统页缓存（page cache）最适合提高读取性能，尽管行缓存也可以为读取密集型操作（读取操作占负载的95％）提供一些改进。行缓存禁止用于写密集型操作。如果启用行缓存，会将 SSTables 中的部分分区数据存储在内存中。在 Cassandra 2.2和更高版本中，它存储在堆外内存中，这样减轻了 JVM 的 GC 压力。当缓存已满时，行缓存使用 LRU 策略回收内存。</p>
+<p>行缓存大小以及要存储的行数都是可配置的。配置存储行数很重要，可以使类似查询“最后10项”的速度非常快。如果启用了行缓存，则将从行缓存中读取所需的分区数据，从而有可能节省两次从磁盘上查找的时间。行缓存中存储的行是经常访问的行，在访问它们时，这些行将合并并从 SSTable 保存到行缓存中。存储后，数据可用于以后的查询。行缓存不可以通过写操作添加。如果对该行进行写操作，则该行缓存将失效，直到读取该行后才再次被缓存。同样，如果更新分区，则会从缓存中逐出整个分区。如果行缓存中没有想要的数据，则检查布隆过滤器。</p>
+<h3 id="Bloom-Filter（布隆过滤器）"><a href="#Bloom-Filter（布隆过滤器）" class="headerlink" title="Bloom Filter（布隆过滤器）"></a>Bloom Filter（布隆过滤器）</h3><p>首先，Cassandra 会检查布隆过滤器，以查找哪些 SSTables 可能具有请求分区数据。布隆过滤器存储在堆外存储器中。每个 SSTable 都有一个关联的布隆过滤器。布隆过滤器可以确定 SSTable 不包含哪些分区的数据。布隆过滤器还可以查出相应分区数据存储在一个 SSTable 中的可能性。它可以通过缩小键池大小来提高查找分区键的速度。但是，由于布隆过滤器是一个概率函数，因此可能导致误报。布隆过滤器找出的 SSTable 中也可能没有对应的数据。如果布隆过滤器不可以确定是哪个 SSTable ，Cassandra 会检查分区键缓存。</p>
+<p>每十亿个分区，布隆过滤器大约会占用1-2GB大小空间。在极端情况下，每行可以对应一个分区，因此在一台机器上可以轻松拥有数十亿个这样的条目。如果要以内存换取性能，则布隆过滤器是可调的。</p>
+<h3 id="Partition-Key-Cache（分区键缓存）"><a href="#Partition-Key-Cache（分区键缓存）" class="headerlink" title="Partition Key Cache（分区键缓存）"></a>Partition Key Cache（分区键缓存）</h3><p>如果启用分区键缓存，会将分区索引存储在堆外内存中。键缓存占内存小，且可配置，每次“命中”都可以减少一次查找。如果在键缓存中找到分区键，则可以直接转到压缩偏移量映射表，从磁盘上找到对应的数据。分区键缓存一旦预热就可以更好地发挥作用，并且可以大大提高冷启动时读取的性能。如果节点上的内存非常有限，可以限定保存在键缓存中的分区键的数量。如果在键缓存中找不到分区键，则搜索 Partition Summary。</p>
+<p>分区键缓存的大小以及存储在键缓存中的分区键的数量都是可配置的。</p>
+<h3 id="Partition-Summary（分区稀疏索引？这个直接翻译不太好～）"><a href="#Partition-Summary（分区稀疏索引？这个直接翻译不太好～）" class="headerlink" title="Partition Summary（分区稀疏索引？这个直接翻译不太好～）"></a>Partition Summary（分区稀疏索引？这个直接翻译不太好～）</h3><p>Partition Summary 是一种堆外内存结构，存储了分区索引的采样（可以理解为分区稀疏索引～）。分区索引包含所有分区键，而 Partition Summary 每隔 X 个键进行采样，并映射索引文件中第 Xth 键的位置。例如，如果 Partition Summary 设置为每20个键采样一次，它会将 SSTable 文件的开头作为第一个键，然后是第20个键及其在文件中的位置，依此类推。虽然不如分区键的位置那么精确，但是 Partition Summary 可以缩短扫描时间。找到可能的分区键值的范围后，然后确定分区索引。</p>
+<p>通过配置采样频率，您可以以内存换取性能，Partition Summary 的粒度越小，使用的内存就越多。配置 <code>index_interval</code> 属性可以更改采样频率。可以通过配置 <code>index_summary_capacity_in_mb</code> 属性设置占用固定大小的内存，默认为堆大小的5％。</p>
+<h3 id="Partition-Index（分区索引）"><a href="#Partition-Index（分区索引）" class="headerlink" title="Partition Index（分区索引）"></a>Partition Index（分区索引）</h3><p>分区索引位于磁盘上，存储了映射到所有分区键的位置。检查了 Partition Summary 中的分区键范围后，然后转到分区索引以查找所需分区键的位置。对范围内的列将进行遍历查找。使用找到的信息，分区索引进入压缩偏移量映射表，以在磁盘上找到包含数据的压缩块。如果必须搜索分区索引，则需要两次磁盘搜索才能找到所需的数据。</p>
+<h3 id="Compression-offset-map（压缩偏移量映射表）"><a href="#Compression-offset-map（压缩偏移量映射表）" class="headerlink" title="Compression offset map（压缩偏移量映射表）"></a>Compression offset map（压缩偏移量映射表）</h3><p>压缩偏移量映射表存储了分区数据的确切位置。它存储在堆外内存中，可以通过<strong>分区键缓存</strong>或<strong>分区索引</strong>进行访问。从压缩偏移量映射表确定了磁盘位置后，就可以从对应的的 SSTable 中查询出被压缩的分区数据。</p>
+<p>注意：在分区内，并非查询所有行的代价都相同。由于不需要查询分区级索引，因此查询分区的最开始（第一行，由自定义键决定）的开销稍低一些。</p>
+<p>每TB数据，压缩偏移量映射表将占用 1-3 GB。压缩数据越多，压缩块的数量就越多，压缩偏移量映射表也就越大。尽管使用压缩偏移量映射表会消耗 CPU 资源，默认情况下还是会启用压缩。启用压缩将使页缓存更有效，通常来说，利大于弊。</p>
+<p><em>翻译自<a href="https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/dml/dmlAboutReads.html" target="_blank" rel="noopener">官方文档</a></em></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/public/tags/Cassandra/" rel="tag"># Cassandra</a>
+          
+            <a href="/public/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/22/一文了解 Spring Starter 原理/" rel="next" title="一文了解 Spring Starter 原理">
+                <i class="fa fa-chevron-left"></i> 一文了解 Spring Starter 原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+     <div id="gitalk-container"></div>
+  
+
+
+
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="jason song" />
+            
+              <p class="site-author-name" itemprop="name">jason song</p>
+              <p class="site-description motion-element" itemprop="description">创造美好！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jm.taobao.org/" title="阿里中间件BLOG" target="_blank">阿里中间件BLOG</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://flink-china.org/index.html" title="Flink China" target="_blank">Flink China</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MemTable"><span class="nav-number">3.</span> <span class="nav-text">MemTable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Row-Cache（行缓存）"><span class="nav-number">4.</span> <span class="nav-text">Row Cache（行缓存）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bloom-Filter（布隆过滤器）"><span class="nav-number">5.</span> <span class="nav-text">Bloom Filter（布隆过滤器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition-Key-Cache（分区键缓存）"><span class="nav-number">6.</span> <span class="nav-text">Partition Key Cache（分区键缓存）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition-Summary（分区稀疏索引？这个直接翻译不太好～）"><span class="nav-number">7.</span> <span class="nav-text">Partition Summary（分区稀疏索引？这个直接翻译不太好～）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition-Index（分区索引）"><span class="nav-number">8.</span> <span class="nav-text">Partition Index（分区索引）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compression-offset-map（压缩偏移量映射表）"><span class="nav-number">9.</span> <span class="nav-text">Compression offset map（压缩偏移量映射表）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jason song</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '16a173f15eb20b092e69',
+          clientSecret: '17ca6772928121ecd577d36db6af74571116e17c',
+          repo: 'jasonsonghoho.github.io',
+          owner: 'JasonSongHoho',
+          admin: ['JasonSongHoho'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
